@@ -1,0 +1,80 @@
+package main
+
+import (
+	"database/sql"
+	"log"
+
+	_ "github.com/lib/pq"
+)
+
+type Product struct {
+	Product_Id    int     `json:"product_id"`
+	Name          string  `json:"name"`
+	Description   string  `json:"description"`
+	Price         float64 `json:"price"`
+	Resource_Link string  `json:"resource_link"`
+	Category_Id   int     `json:"category_id"`
+	User_Id       int     `json:"user_id"`
+}
+
+type ProductToBuy struct {
+	Product_Id  int     `json:"product_id"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Price       float64 `json:"price"`
+	Category_Id int     `json:"category_id"`
+	User_Id     int     `json:"user_id"`
+}
+
+func AddProduct(db *sql.DB, product Product) error {
+	statement := `insert into Products(name, description, price, user_id, resource_link, category_id) values($1, $2, $3, $4, $5, $6)`
+	_, err := db.Exec(statement, product.Name, product.Description, product.Price, product.User_Id, product.Resource_Link, product.Category_Id)
+	if err != nil {
+		log.Println("Error: ", err)
+		return err
+	}
+	log.Printf("Product %s added successfully", product.Name)
+	return nil
+}
+
+func GetProductById(db *sql.DB, id int) (*ProductToBuy, error) {
+	var product ProductToBuy
+	row := db.QueryRow("SELECT product_id, name, description, price, user_id, category_id FROM Products WHERE product_id = $1", id)
+	err := row.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Category_Id)
+	if err != nil {
+		log.Println("GetProductById error: ", err)
+		return nil, err
+	}
+	return &product, nil
+}
+
+func GetProductsByTitle(db *sql.DB, title string) ([]ProductToBuy, error) {
+	var products []ProductToBuy
+	rows, err := db.Query("Select product_id, name, description, price, user_id, category_id from Products where name ILIKE '%' || $1 || '%'", title)
+	if err != nil {
+		log.Println("GetProductByTitle error: ", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var product ProductToBuy
+		err := rows.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Category_Id)
+		if err != nil {
+			log.Println("GetProductByTitle error: ", err)
+			continue
+		}
+		products = append(products, product)
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Println("GetProductByTitle error: ", err)
+		return nil, err
+	}
+
+	if len(products) == 0 {
+		return nil, sql.ErrNoRows
+	}
+
+	return products, nil
+}
