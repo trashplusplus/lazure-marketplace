@@ -1,0 +1,24 @@
+@font-face {
+    font-family: "Chakra";
+    src: url("../fonts/Chakra.ttf") format("truetype");
+}
+
+:root {
+    --background-color: #141519;
+    --primary-color: #3fb3fc;
+    --secondary-color: #1c1d20;
+    --highlight-color: #3fb3fc;
+    --border-color: #8d8d8c;
+    --href-color: #4343ce;
+    --text-color: #8d8d8c;
+    --submit-btn-color: #3e824c;
+    --submit-btn-hover-color: #499859;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    background-color: var(--background-color);
+    color: white;
+    font-family: Chakra, sans-serif;
+}

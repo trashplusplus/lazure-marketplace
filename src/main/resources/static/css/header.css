@@ -1,0 +1,113 @@
+a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-color);
+    font-family: Chakra, sans-serif;
+}
+header > div {
+    display: flex;
+    align-items: center;
+}
+header > div > * {
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.profile-href:hover {
+    text-decoration: underline;
+    color: var(--highlight-color);
+}
+
+header > div > *:nth-child(1){
+    margin-left: 0;
+}
+
+header img {
+    width: 45px;
+}
+
+ion-icon {
+    font-size: 35px;
+    color: var(--text-color);
+}
+
+/******* Side menu *********/
+
+.side-menu {
+    cursor: context-menu;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background-color: var(--secondary-color);
+    overflow-x: hidden;
+    transition: 0.3s;
+    border-radius: 15px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+    margin-left: 0;
+}
+
+.side-menu a {
+    text-decoration: none;
+    font-size: 15px;
+    color: var(--text-color);
+    display: block;
+    padding: 0;
+    margin-left: 10px;
+}
+.side-menu > div {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+}
+.side-menu ion-icon {
+    font-size: 20px;
+}
+.menu-header {
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.menu-header img {
+    width: 45px;
+}
+.close-menu {
+    font-size: 36px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.close-menu:hover {
+    color: var(--highlight-color);
+}
+
+.open-menu {
+    left: 0;
+}
+
+.side-menu-element {
+    cursor: pointer;
+    margin-left: 15px;
+    margin-right: 15px;
+    border-radius: 10px;
+}
+.side-menu-element:hover {
+    background-color: var(--background-color);
+}
+
+.profile-balance {
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 0 4px 0 4px;
+}
+.profile-balance:hover {
+    background-color: var(--secondary-color);
+}
+
+

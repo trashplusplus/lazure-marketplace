@@ -1,0 +1,29 @@
+<header>
+    <div>
+        <ion-icon id="menu" name="menu-outline"></ion-icon>
+
+        <div id="side-menu" class="side-menu">
+            <div class="menu-header">
+                <img src="/img/logo.png" alt="logo"/>
+                <button id="close-menu" class="close-menu">&times;</button>
+            </div>
+            <div class="side-menu-element">
+                <ion-icon name="storefront-outline"></ion-icon>
+                <a href="/">Marketplace</a>
+            </div>
+            <div class="side-menu-element">
+                <ion-icon name="pricetags-outline"></ion-icon>
+                <a href="/my-listings">My Listings</a>
+            </div>
+        </div>
+
+        <img id="logo" src="/img/logo.png" alt="logo"/>
+        <a class="profile-href" id="profile" th:href="@{/profile/{username} (username = ${headerUserInfo.username})}" th:text="${headerUserInfo.username}"></a>
+    </div>
+    <div class="profile-balance">
+        <span id="balance" th:text="${headerUserInfo.balance}"></span>
+        <img id="profile-img" src="/img/jellyfish.png" alt="profile"/>
+    </div>
+
+    <script src="/js/header.js"></script>
+</header>

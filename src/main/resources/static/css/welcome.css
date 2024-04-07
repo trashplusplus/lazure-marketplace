@@ -1,0 +1,13 @@
+@font-face {
+    font-family: "Chakra";
+    src: url("../fonts/Chakra.ttf") format("truetype");
+}
+
+body {
+    background-color: #1b1b1b;
+    color: white;
+}
+
+p {
+    font-family: Chakra, sans-serif;
+}
