@@ -13,6 +13,10 @@
     --text-color: #8d8d8c;
     --submit-btn-color: #3e824c;
     --submit-btn-hover-color: #499859;
+    --toast-success: #0ABF30;
+    --toast-error: #E24D4C;
+    --toast-warning: #E9BD0C;
+    --toast-info: #3498DB;
 }
 * {
     box-sizing: border-box;

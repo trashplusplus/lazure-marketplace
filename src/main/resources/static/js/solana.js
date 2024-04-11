@@ -5,11 +5,11 @@ async function connectWallet() {
         try {
             return await window.solana.connect({onlyIfTrusted: false});
         } catch (error) {
-            console.error("Failed to connect the Phantom wallet:", error);
+            console.log("error", `Failed to connect the Phantom wallet: ${error}`);
             throw new Error("Wallet connection failed");
         }
     } else {
-        console.log("Phantom wallet not found!");
+        createToast("error", "Wallet is not installed!")
         throw new Error("Phantom wallet not found");
     }
 }
@@ -22,25 +22,12 @@ async function getAccountBalance(publicKey) {
     try {
         const connection = getSolanaConnection();
         const balance = await connection.getBalance(publicKey);
-        const solBalance = balance / solanaWeb3.LAMPORTS_PER_SOL;
-        console.log(`Balance: ${solBalance} SOL`);
-        return solBalance;
+        return balance / solanaWeb3.LAMPORTS_PER_SOL;
     } catch (error) {
-        console.error('Error getting balance:', error);
+        console.log("error", `Error getting balance: ${error}`);
         throw new Error("Failed to get account balance");
     }
 }
-/*
-(async () => {
-    try {
-        const wallet = await connectWallet();
-
-        const balance = await getAccountBalance(wallet.publicKey);
-        console.log(`The wallet balance is ${balance} SOL`);
-    } catch (error) {
-        console.error(error);
-    }
-})();*/
 
 async function showWalletInfo() {
     const wallet = await connectWallet();
