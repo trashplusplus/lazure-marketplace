@@ -15,21 +15,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class UserController {
     @GetMapping({"", "/"})
     public String mainPage(Model model) {
-        model.addAttribute("headerUserInfo", new SimpleUserHeaderDTO("simord", 100, "USDT"));
+        model.addAttribute("headerUserInfo", new SimpleUserHeaderDTO("simord", null, "USDT", false));
         return "global/marketplace";
     }
 
     @GetMapping("/profile/{username}")
     public String profile(@PathVariable String username,
                           Model model) {
-        model.addAttribute("headerUserInfo", new SimpleUserHeaderDTO("simord", 100, "USDT"));
-        //model.addAttribute("user", simpleUserService.findUserByUsername(username).get());
+        model.addAttribute("headerUserInfo", new SimpleUserHeaderDTO("simord", null, "USDT", false));
         return "user/profile";
     }
 
     @GetMapping("/my-listings")
     public String listings(Model model) {
-        model.addAttribute("headerUserInfo", new SimpleUserHeaderDTO("simord", 100, "USDT"));
+        model.addAttribute("headerUserInfo", new SimpleUserHeaderDTO("simord", null, "USDT", false));
         return "user/listings";
     }
 }

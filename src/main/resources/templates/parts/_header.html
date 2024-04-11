@@ -1,3 +1,4 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <header>
     <div>
         <ion-icon id="menu" name="menu-outline"></ion-icon>
@@ -20,10 +21,11 @@
         <img id="logo" src="/img/logo.png" alt="logo"/>
         <a class="profile-href" id="profile" th:href="@{/profile/{username} (username = ${headerUserInfo.username})}" th:text="${headerUserInfo.username}"></a>
     </div>
-    <div class="profile-balance">
-        <span id="balance" th:text="${headerUserInfo.balance}"></span>
+    <div class="profile-balance" onclick="showWalletInfo()">
+        <span id="balance" th:text="${headerUserInfo.walletConnected ? headerUserInfo.balance : 'Connect Wallet'}"></span>
         <img id="profile-img" src="/img/jellyfish.png" alt="profile"/>
     </div>
 
     <script src="/js/header.js"></script>
+    <script src="/js/solana.js"></script>
 </header>

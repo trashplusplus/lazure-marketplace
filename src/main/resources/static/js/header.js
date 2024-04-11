@@ -2,7 +2,6 @@ document.getElementById('logo').onclick = function () {
     location.href='/'
 };
 
-
 document.querySelectorAll('.side-menu-element').forEach(function(element) {
     element.addEventListener('click', function() {
         let link = this.querySelector('a');

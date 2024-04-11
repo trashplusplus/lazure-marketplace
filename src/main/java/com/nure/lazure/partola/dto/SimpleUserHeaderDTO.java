@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class SimpleUserHeaderDTO {
     private String username;
-    private double balance;
+    private String balance;
     private String currency;
+    private boolean walletConnected;
 }
