@@ -111,3 +111,30 @@ ion-icon {
 }
 
 
+
+/****** Wallet Info ********/
+.wallet-info {
+    right: 0;
+    top: -100%;
+    left: unset;
+    height: 200px;
+    transition: top 0.3s;
+    display: block;
+}
+
+.open-wallet-info {
+    top: 0;
+}
+
+.wallet-info-element {
+    cursor: context-menu;
+    gap: 10px;
+}
+
+.wallet-info-disconnect {
+    gap: 10px;
+}
+
+.wallet-info-element:hover {
+    background-color: transparent;
+}

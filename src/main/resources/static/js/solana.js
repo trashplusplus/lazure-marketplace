@@ -50,9 +50,9 @@ async function showWalletInfo() {
     const wallet = await connectWallet();
 
     let balance = await getAccountBalance(wallet.publicKey);
-    console.log(`The wallet balance is ${balance} SOL`);
-
-    console.log(`Wallet address is ${wallet.publicKey}`)
+    let shortWalletAddress = shortenWalletAddress(wallet.publicKey.toString());
+    document.getElementById("wallet-info").classList.add("open-wallet-info");
+    document.getElementById("wallet-short-info").innerText = `${shortWalletAddress} ${balance} SOL`;
 }
 
 function setUserRejected(isRejected) {
@@ -63,3 +63,22 @@ function getUserRejectedRequest() {
     return localStorage.getItem(LOCALSTORAGE_USER_REJECTED_ID) === "true";
 }
 
+function shortenWalletAddress(fullAddress) {
+    if (fullAddress.length > 8) {
+        return `${fullAddress.slice(0, 5)}...${fullAddress.slice(-3)}`;
+    }
+    return fullAddress;
+}
+
+async function disconnectWallet() {
+    if (window.solana && window.solana.isPhantom) {
+        try {
+            await window.solana.disconnect();
+            createToast("info", "Wallet was successfully disconnected!");
+            document.getElementById("balance").innerText = "Connect Wallet";
+            document.getElementById('wallet-info').classList.remove('open-wallet-info');
+        } catch (error) {
+            createToast("error", "Error disconnecting wallet:", error)
+        }
+    }
+}

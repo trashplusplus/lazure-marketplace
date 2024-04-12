@@ -2,7 +2,6 @@
 <header>
     <div>
         <ion-icon id="menu" name="menu-outline"></ion-icon>
-
         <div id="side-menu" class="side-menu">
             <div class="menu-header">
                 <img src="/img/logo.png" alt="logo"/>
@@ -24,6 +23,20 @@
     <div class="profile-balance" onclick="showWalletInfo()">
         <span id="balance" th:text="${headerUserInfo.walletConnected ? headerUserInfo.balance : 'Connect Wallet'}"></span>
         <img id="profile-img" src="/img/jellyfish.png" alt="profile"/>
+    </div>
+    <div id="wallet-info" class="wallet-info side-menu">
+        <div class="menu-header">
+            <img src="/img/jellyfish.png" alt="jellyfish"/>
+            <button id="close-info" class="close-menu">&times;</button>
+        </div>
+        <div class="wallet-info-element side-menu-element">
+            <ion-icon name="wallet-outline"></ion-icon>
+            <span id="wallet-short-info"></span>
+        </div>
+        <div class="wallet-info-disconnect side-menu-element">
+            <ion-icon name="log-out-outline"></ion-icon>
+            <span onclick="disconnectWallet()">Disconnect</span>
+        </div>
     </div>
 
     <script src="/js/solana.js"></script>

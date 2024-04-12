@@ -17,9 +17,8 @@ document.getElementById('close-menu').addEventListener('click', function() {
     document.getElementById('side-menu').classList.remove('open-menu');
 });
 
+document.getElementById('close-info').addEventListener('click', function() {
+    document.getElementById('wallet-info').classList.remove('open-wallet-info');
+});
 
-function closeDropdown() {
-    let dropdown = document.querySelector('.language-dropdown .dropdown');
-    dropdown.style.display = 'none';
-}
 
