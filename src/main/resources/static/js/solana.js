@@ -1,84 +1,113 @@
 const SOLANA_NET = 'devnet';
 const LOCALSTORAGE_USER_REJECTED_ID = 'userRejectedWalletConnection';
 
-(async () => {
-    try {
-        if (!getUserRejectedRequest()) {
-            const wallet = await connectWallet();
-            document.getElementById("balance").innerText = await getAccountBalance(wallet.publicKey) + " SOL";
-        }
-    } catch (error) {
-        setUserRejected(true);
+class WalletManager {
+    constructor() {
+        this.wallet = null;
+        this.connection = null;
+        this.init();
     }
-})();
 
-
-async function connectWallet() {
-    if (window.solana && window.solana.isPhantom) {
+    async init() {
         try {
-            let wallet = await window.solana.connect({onlyIfTrusted: false});
-            document.getElementById("balance").innerText = await getAccountBalance(wallet.publicKey) + " SOL";
-            setUserRejected(false);
-            return wallet;
+            if (!this.getUserRejectedRequest()) {
+                this.wallet = await this.connectWallet();
+                this.connection = this.getSolanaConnection();
+                await this.updateBalanceDisplay();
+            }
         } catch (error) {
-            createToast("warning", `Failed to connect the Phantom wallet: ${error}`);
-            setUserRejected(true);
-            throw new Error("Wallet connection failed");
+            console.error("Initialization failed:", error);
         }
-    } else {
-        createToast("info", "You should install Phantom wallet first.");
-        throw new Error("Phantom wallet not found");
     }
-}
 
-function getSolanaConnection() {
-    return new solanaWeb3.Connection(solanaWeb3.clusterApiUrl(SOLANA_NET), 'confirmed');
-}
-
-async function getAccountBalance(publicKey) {
-    try {
-        const connection = getSolanaConnection();
-        const balance = await connection.getBalance(publicKey);
-        return balance / solanaWeb3.LAMPORTS_PER_SOL;
-    } catch (error) {
-        createToast("error", `Error getting balance: ${error}`);
-        throw new Error("Failed to get account balance");
+    getSolanaConnection() {
+        return new solanaWeb3.Connection(solanaWeb3.clusterApiUrl(SOLANA_NET), 'confirmed');
     }
-}
 
-async function showWalletInfo() {
-    const wallet = await connectWallet();
-
-    let balance = await getAccountBalance(wallet.publicKey);
-    let shortWalletAddress = shortenWalletAddress(wallet.publicKey.toString());
-    document.getElementById("wallet-info").classList.add("open-wallet-info");
-    document.getElementById("wallet-short-info").innerText = `${shortWalletAddress} ${balance} SOL`;
-}
-
-function setUserRejected(isRejected) {
-    localStorage.setItem(LOCALSTORAGE_USER_REJECTED_ID, isRejected.toString());
-}
-
-function getUserRejectedRequest() {
-    return localStorage.getItem(LOCALSTORAGE_USER_REJECTED_ID) === "true";
-}
-
-function shortenWalletAddress(fullAddress) {
-    if (fullAddress.length > 8) {
-        return `${fullAddress.slice(0, 5)}...${fullAddress.slice(-3)}`;
+    async connectWallet() {
+        if (window.solana && window.solana.isPhantom) {
+            try {
+                this.wallet = await window.solana.connect({onlyIfTrusted: false});
+                this.setUserRejected(false);
+                await this.updateBalanceDisplay();
+                return this.wallet;
+            } catch (error) {
+                this.handleWalletConnectionError(error);
+                throw error;
+            }
+        } else {
+            createToast("info", "You should install Phantom wallet first.");
+            throw new Error("Phantom wallet not found");
+        }
     }
-    return fullAddress;
-}
 
-async function disconnectWallet() {
-    if (window.solana && window.solana.isPhantom) {
+    async updateBalanceDisplay() {
+        const balance = await this.getAccountBalance(this.wallet.publicKey);
+        document.getElementById("balance").innerText = `${balance} SOL`;
+    }
+
+    async getAccountBalance(publicKey) {
+        if (!this.connection) {
+            this.connection = this.getSolanaConnection();
+        }
         try {
-            await window.solana.disconnect();
-            createToast("info", "Wallet was successfully disconnected!");
-            document.getElementById("balance").innerText = "Connect Wallet";
-            document.getElementById('wallet-info').classList.remove('open-wallet-info');
+            const balance = await this.connection.getBalance(publicKey);
+            return balance / solanaWeb3.LAMPORTS_PER_SOL;
         } catch (error) {
-            createToast("error", "Error disconnecting wallet:", error)
+            createToast("error", `Error getting balance: ${error}`);
+            throw new Error("Failed to get account balance");
         }
     }
+
+    async showWalletInfo() {
+        if (!this.wallet) {
+            await this.connectWallet();
+        }
+        const balance = await this.getAccountBalance(this.wallet.publicKey);
+        const shortWalletAddress = this.shortenWalletAddress(this.wallet.publicKey.toString());
+        document.getElementById("wallet-info").classList.add("open-wallet-info");
+        document.getElementById("wallet-short-info").innerText = `${shortWalletAddress} ${balance} SOL`;
+    }
+
+    shortenWalletAddress(fullAddress) {
+        return fullAddress.length > 8 ? `${fullAddress.slice(0, 5)}...${fullAddress.slice(-3)}` : fullAddress;
+    }
+
+    async disconnectWallet() {
+        if (window.solana && window.solana.isPhantom) {
+            try {
+                await window.solana.disconnect();
+                createToast("info", "Wallet was successfully disconnected!");
+                document.getElementById("balance").innerText = "Connect Wallet";
+                document.getElementById('wallet-info').classList.remove("open-wallet-info");
+                this.wallet = null;
+                this.connection = null;
+                this.setUserRejected(true);
+            } catch (error) {
+                createToast("error", `Error disconnecting wallet: ${error}`);
+            }
+        }
+    }
+
+    setUserRejected(isRejected) {
+        localStorage.setItem(LOCALSTORAGE_USER_REJECTED_ID, isRejected.toString());
+    }
+
+    getUserRejectedRequest() {
+        return localStorage.getItem(LOCALSTORAGE_USER_REJECTED_ID) === "true";
+    }
+
+    handleWalletConnectionError(error) {
+        createToast("warning", `Failed to connect the Phantom wallet: ${error}`);
+        this.setUserRejected(true);
+    }
 }
+
+const walletManager = new WalletManager();
+document.getElementById('profile-balance').addEventListener('click', function() {
+    walletManager.showWalletInfo();
+});
+
+document.getElementById('disconnect-wallet').addEventListener('click', function() {
+    walletManager.disconnectWallet();
+});

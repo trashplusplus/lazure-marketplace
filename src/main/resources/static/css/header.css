@@ -133,6 +133,13 @@ ion-icon {
 
 .wallet-info-disconnect {
     gap: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-left: 15px;
+}
+
+.wallet-info-disconnect:hover {
+    background-color: var(--background-color);
 }
 
 .wallet-info-element:hover {

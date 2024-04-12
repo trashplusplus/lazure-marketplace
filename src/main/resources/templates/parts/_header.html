@@ -20,7 +20,7 @@
         <img id="logo" src="/img/logo.png" alt="logo"/>
         <a class="profile-href" id="profile" th:href="@{/profile/{username} (username = ${headerUserInfo.username})}" th:text="${headerUserInfo.username}"></a>
     </div>
-    <div class="profile-balance" onclick="showWalletInfo()">
+    <div class="profile-balance" id="profile-balance">
         <span id="balance" th:text="${headerUserInfo.walletConnected ? headerUserInfo.balance : 'Connect Wallet'}"></span>
         <img id="profile-img" src="/img/jellyfish.png" alt="profile"/>
     </div>
@@ -33,9 +33,9 @@
             <ion-icon name="wallet-outline"></ion-icon>
             <span id="wallet-short-info"></span>
         </div>
-        <div class="wallet-info-disconnect side-menu-element">
+        <div class="wallet-info-disconnect">
             <ion-icon name="log-out-outline"></ion-icon>
-            <span onclick="disconnectWallet()">Disconnect</span>
+            <span id="disconnect-wallet">Disconnect</span>
         </div>
     </div>
 
