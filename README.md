@@ -1,4 +1,7 @@
-<img src="https://github.com/trashplusplus/lazure-marketplace/assets/19663951/4dd34bb5-f56b-4271-bcdd-da404af41474" alt="Описание изображения" width="128" height="128"> **Lazure** - a pioneering marketplace where you can connect your Phantom wallet to trade a wide range of digital assets and ownership rights. 
+
+![logo](https://github.com/trashplusplus/lazure-marketplace/assets/108837885/e981a09c-08f2-4fb9-8e1e-09ed15fa1205)
+
+**Lazure** - a pioneering marketplace where you can connect your Phantom wallet to trade a wide range of digital assets and ownership rights. 
 Explore and acquire unique 3D assets, pixel art, and even rights to GitHub projects or any online content. 
 Join Lazure today and redefine what it means to own and trade digital creations in a seamless and innovative environment.
 
