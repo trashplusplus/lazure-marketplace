@@ -34,7 +34,7 @@
                 issuer: _issuer,
                 audience: _audience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(60), // TOKEN EXPIRY
+                expires: DateTime.Now.AddMinutes(1440), // TOKEN EXPIRY
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
