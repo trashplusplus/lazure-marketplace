@@ -5,6 +5,6 @@ namespace AccountsAPI.DTOs
     public class UserLoginDto
     {
         [Required]
-        public string WalletId { get; set; }
+        public string WalletId { get; set; }    //some notes
     }
 }
