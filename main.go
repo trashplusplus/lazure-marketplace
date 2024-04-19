@@ -18,7 +18,6 @@ func main() {
 		log.Println("Error initializing database:", err)
 		return
 	}
-	defer db.Close()
 
 	port := os.Getenv("SERVER_PORT")
 	if port == "" {
@@ -36,6 +35,8 @@ func main() {
 	if err := r.Run(serverAddress); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
+
+	defer db.Close()
 }
 
 func AddProductHandler(db *sql.DB) gin.HandlerFunc {
