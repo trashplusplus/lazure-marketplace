@@ -6,16 +6,23 @@ package main
 import (
 	"database/sql"
 	"log"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	serverIP := "localhost:3030"
 	db, err := InitDB()
 	if err != nil {
-		log.Println("Error: ", err)
+		log.Println("Error initializing database:", err)
+		return
+	}
+	defer db.Close()
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("Port is not set")
 	}
 
 	r := gin.Default()
@@ -23,8 +30,11 @@ func main() {
 	r.GET("/getbyid/:id", GetProductByIdHandler(db))
 	r.GET("/getbytitle", GetProductsByTitleHandler(db))
 
-	r.Run(serverIP)
-	defer db.Close()
+	serverAddress := ":" + port
+	log.Printf("Starting server on port %s...", port)
+	if err := r.Run(serverAddress); err != nil {
+		log.Fatal("Failed to start server:", err)
+	}
 }
 
 func AddProductHandler(db *sql.DB) gin.HandlerFunc {
