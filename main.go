@@ -20,7 +20,7 @@ func main() {
 	}
 	defer db.Close()
 
-	port := os.Getenv("PORT")
+	port := os.Getenv("SERVER_PORT")
 	if port == "" {
 		log.Fatal("Port is not set")
 	}
@@ -32,6 +32,7 @@ func main() {
 
 	serverAddress := ":" + port
 	log.Printf("Starting server on port %s...", port)
+
 	if err := r.Run(serverAddress); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}

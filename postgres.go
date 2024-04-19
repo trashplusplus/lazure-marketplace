@@ -1,6 +1,3 @@
-// here i need to create join to the database and include this file to the main.go
-// postgresql
-// create function initDB() to connect to the database and read config from .env file
 package main
 
 import (
@@ -24,10 +21,11 @@ func InitDB() (*sql.DB, error) {
 	dbname := os.Getenv("DBNAME")
 	port := os.Getenv("PORT")
 
-  log.Println("PORTTTT: ", port)
+	log.Println("PORTTTT: ", port)
 
 	dbSource := " host=" + host + " user=" + user + " password=" + password + " dbname=" + dbname + " port=" + port
 
+	log.Println("DBSOURCE: ", dbSource)
 	db, err := sql.Open("postgres", dbSource)
 	if err != nil {
 		log.Fatal(err)
