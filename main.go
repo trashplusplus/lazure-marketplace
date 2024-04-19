@@ -1,6 +1,3 @@
-// i need to create productsAPI, a server to connect to the Postgresql db and get data from it
-// basic CRUD operations and some different files, for DB connection postgresql.go and products.go
-// also i need to import Gin library
 package main
 
 import (
@@ -19,7 +16,7 @@ func main() {
 		return
 	}
 
-	port := os.Getenv("SERVER_PORT")
+	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("Port is not set")
 	}
@@ -29,7 +26,7 @@ func main() {
 	r.GET("/getbyid/:id", GetProductByIdHandler(db))
 	r.GET("/getbytitle", GetProductsByTitleHandler(db))
 
-	serverAddress := "localhost:" + port
+	serverAddress := ":" + port
 	log.Printf("Starting server on %s...", serverAddress)
 
 	if err := r.Run(serverAddress); err != nil {
