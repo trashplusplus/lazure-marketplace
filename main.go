@@ -20,7 +20,7 @@ func main() {
 	}
 	defer db.Close()
 
-	port := os.Getenv("SERVER_PORT")
+	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("Port is not set")
 	}
