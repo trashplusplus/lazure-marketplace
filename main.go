@@ -30,7 +30,7 @@ func main() {
 	r.GET("/getbytitle", GetProductsByTitleHandler(db))
 
 	serverAddress := "localhost:" + port
-	log.Printf("Starting server on port %s...", port)
+	log.Printf("Starting server on %s...", serverAddress)
 
 	if err := r.Run(serverAddress); err != nil {
 		log.Fatal("Failed to start server:", err)
