@@ -5,7 +5,7 @@ class WalletManager {
     constructor() {
         this.wallet = null;
         this.connection = null;
-        this.init();
+        this.init().then(r => console.log());
     }
 
     async init() {
@@ -13,7 +13,7 @@ class WalletManager {
             if (!this.getUserRejectedRequest()) {
                 this.wallet = await this.connectWallet();
                 this.connection = this.getSolanaConnection();
-                await this.updateBalanceDisplay();
+                await this.updateDisplayedUserInfo();
             }
         } catch (error) {
             console.error("Initialization failed:", error);
@@ -29,7 +29,7 @@ class WalletManager {
             try {
                 this.wallet = await window.solana.connect({onlyIfTrusted: false});
                 this.setUserRejected(false);
-                await this.updateBalanceDisplay();
+                await this.updateDisplayedUserInfo();
                 return this.wallet;
             } catch (error) {
                 this.handleWalletConnectionError(error);
@@ -41,9 +41,15 @@ class WalletManager {
         }
     }
 
-    async updateBalanceDisplay() {
-        const balance = await this.getAccountBalance(this.wallet.publicKey);
+    async updateDisplayedUserInfo() {
+        let wallet = this.wallet.publicKey;
+        let profileURL = document.getElementById("profile");
+        const balance = await this.getAccountBalance(wallet);
+
         document.getElementById("balance").innerText = `${balance} SOL`;
+
+        profileURL.innerText = this.shortenWalletAddress(wallet.toString());
+        profileURL.href = "/profile/" + wallet.toString();
     }
 
     async getAccountBalance(publicKey) {
@@ -63,11 +69,20 @@ class WalletManager {
         if (!this.wallet) {
             await this.connectWallet();
         }
-        const balance = await this.getAccountBalance(this.wallet.publicKey);
-        const shortWalletAddress = this.shortenWalletAddress(this.wallet.publicKey.toString());
+
         document.getElementById("wallet-info").classList.add("open-wallet-info");
-        document.getElementById("wallet-short-info").innerText = `${shortWalletAddress} ${balance} SOL`;
+        document.getElementById("wallet-short-info").innerText = "Loading...";
+
+        try {
+            const balance = await this.getAccountBalance(this.wallet.publicKey);
+            const shortWalletAddress = this.shortenWalletAddress(this.wallet.publicKey.toString());
+            document.getElementById("wallet-short-info").innerText = `${shortWalletAddress} ${balance} SOL`;
+        } catch (error) {
+            document.getElementById("wallet-short-info").innerText = "Failed to load data";
+            console.error("Failed to load wallet info:", error);
+        }
     }
+
 
     shortenWalletAddress(fullAddress) {
         return fullAddress.length > 8 ? `${fullAddress.slice(0, 5)}...${fullAddress.slice(-3)}` : fullAddress;
@@ -80,6 +95,9 @@ class WalletManager {
                 createToast("info", "Wallet was successfully disconnected!");
                 document.getElementById("balance").innerText = "Connect Wallet";
                 document.getElementById('wallet-info').classList.remove("open-wallet-info");
+                let profileURL = document.getElementById("profile");
+                profileURL.innerText = "";
+                profileURL.href = "";
                 this.wallet = null;
                 this.connection = null;
                 this.setUserRejected(true);
