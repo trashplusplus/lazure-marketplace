@@ -21,11 +21,8 @@ func InitDB() (*sql.DB, error) {
 	dbname := os.Getenv("DBNAME")
 	dbport := os.Getenv("DBPORT")
 
-	log.Println("PORT: ", dbport)
-
 	dbSource := " host=" + host + " user=" + user + " password=" + password + " dbname=" + dbname + " port=" + dbport
 
-	log.Println("DBSOURCE: ", dbSource)
 	db, err := sql.Open("postgres", dbSource)
 	if err != nil {
 		log.Fatal(err)
