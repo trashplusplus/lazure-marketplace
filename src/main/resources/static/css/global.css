@@ -18,11 +18,27 @@
     --toast-warning: #E9BD0C;
     --toast-info: #3498DB;
 }
-* {
-    box-sizing: border-box;
-}
 body {
     background-color: var(--background-color);
     color: white;
     font-family: Chakra, sans-serif;
+}
+* {
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary-color) transparent;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-color);
+    border-radius: 5px;
 }

@@ -41,7 +41,7 @@ ion-icon {
     cursor: context-menu;
     position: fixed;
     top: 0;
-    left: -250px;
+    left: -200%;
     width: 250px;
     height: 100%;
     background-color: var(--secondary-color);
@@ -89,6 +89,7 @@ ion-icon {
 
 .open-menu {
     left: 0;
+    z-index: 999;
 }
 
 .side-menu-element {
@@ -115,7 +116,7 @@ ion-icon {
 /****** Wallet Info ********/
 .wallet-info {
     right: 0;
-    top: -100%;
+    top: -200%;
     left: unset;
     height: 200px;
     transition: top 0.3s;

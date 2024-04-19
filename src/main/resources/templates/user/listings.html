@@ -6,6 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/toast.css}">
+    <link rel="stylesheet" th:href="@{/css/listings.css}">
     <script th:src="@{/js/toast.js}" defer></script>
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
@@ -15,8 +16,10 @@
 <body>
     <div th:insert="~{parts/_header.html :: header}"></div>
 
-    <div>
-        My Listings
+    <div class="products-container">
+        <div class="product">
+            <img src="/img/addFade.png" alt="add">
+        </div>
     </div>
 </body>
 </html>

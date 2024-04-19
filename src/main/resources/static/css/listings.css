@@ -1,0 +1,26 @@
+.product {
+    background-color: var(--secondary-color);
+    width: 150px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.product img {
+    height: 100px;
+}
+
+.products-container {
+    left: 15%;
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 70%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-right: 2px;
+}
