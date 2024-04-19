@@ -19,9 +19,9 @@ func InitDB() (*sql.DB, error) {
 	user := os.Getenv("USER")
 	password := os.Getenv("PASS")
 	dbname := os.Getenv("DBNAME")
-	port := os.Getenv("PORT")
+	port := os.Getenv("DB_PORT")
 
-	log.Println("PORTTTT: ", port)
+	log.Println("DB_PORTT: ", port)
 
 	dbSource := " host=" + host + " user=" + user + " password=" + password + " dbname=" + dbname + " port=" + port
 
