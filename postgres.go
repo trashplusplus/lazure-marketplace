@@ -15,11 +15,11 @@ func InitDB() (*sql.DB, error) {
 		log.Fatalf("Loading env file error: %v", err)
 	}
 
-	host := os.Getenv("HOST")
-	user := os.Getenv("USER")
-	password := os.Getenv("PASS")
+	host := os.Getenv("DBHOST")
+	user := os.Getenv("DBUSER")
+	password := os.Getenv("DBPASS")
 	dbname := os.Getenv("DBNAME")
-	dbport := os.Getenv("DB_PORT")
+	dbport := os.Getenv("DBPORT")
 
 	log.Println("PORT: ", dbport)
 
