@@ -29,7 +29,7 @@ func main() {
 	r.GET("/getbyid/:id", GetProductByIdHandler(db))
 	r.GET("/getbytitle", GetProductsByTitleHandler(db))
 
-	serverAddress := ":" + port
+	serverAddress := "localhost:" + port
 	log.Printf("Starting server on port %s...", port)
 
 	if err := r.Run(serverAddress); err != nil {
