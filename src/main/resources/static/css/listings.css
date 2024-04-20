@@ -1,3 +1,8 @@
+.add-product {
+    position: absolute;
+    left: 3%;
+}
+
 .product {
     background-color: var(--secondary-color);
     width: 150px;
@@ -7,6 +12,7 @@
     align-items: center;
     border-radius: 10px;
     cursor: pointer;
+    flex-direction: column;
 }
 
 .product img {
@@ -23,4 +29,22 @@
     max-height: 80vh;
     overflow-y: auto;
     padding-right: 2px;
+}
+
+.short-product-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.short-product-info p {
+    color: var(--text-color);
+    margin: 0;
+}
+
+.short-product-info span {
+    color: white;
 }
