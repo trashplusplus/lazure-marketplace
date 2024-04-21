@@ -40,7 +40,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    width: 70%;
+    width: 66%;
     max-height: 80vh;
     overflow-y: auto;
     padding-right: 2px;
@@ -53,6 +53,7 @@
     align-items: center;
     gap: 8px;
     margin-top: 15px;
+    text-align: center;
 }
 
 .short-product-info p {

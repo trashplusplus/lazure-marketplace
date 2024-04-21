@@ -50,6 +50,7 @@ ion-icon {
     transition: 0.3s;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     margin-left: 0;
+    z-index: 999;
 }
 
 .side-menu a {
@@ -89,7 +90,6 @@ ion-icon {
 
 .open-menu {
     left: 0;
-    z-index: 999;
 }
 
 .side-menu-element {
