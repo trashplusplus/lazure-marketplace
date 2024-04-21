@@ -19,6 +19,13 @@
     height: 100px;
 }
 
+.add-product img {
+    position: absolute;
+    left: max(40px, 3%);
+    height: 75px;
+    margin: 0;
+}
+
 .products-container {
     left: max(230px, 15%);
     position: absolute;
