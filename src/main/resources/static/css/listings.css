@@ -1,6 +1,6 @@
 .add-product {
     position: absolute;
-    left: 3%;
+    left: max(40px, 3%);
 }
 
 .product {
@@ -20,7 +20,7 @@
 }
 
 .products-container {
-    left: 15%;
+    left: max(230px, 15%);
     position: absolute;
     display: flex;
     flex-wrap: wrap;
