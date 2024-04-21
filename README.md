@@ -1,14 +1,25 @@
+![image](https://github.com/trashplusplus/lazure-marketplace/assets/19663951/ef6565d8-144a-454c-bf19-4a681022cdda)
+
+
 All possible endpoints:
 ```
-POST -> /add
-GET -> /getbyid/:id
-GET -> /getbytitle
+✉️ POST -> /product
+🔴 DELETE -> /product/:id
+🍃 GET -> /product/:id
+
+
+🍃 GET -> /catalog
+🍃 GET -> /wallet/:walletId
+🍃 GET -> /category
 ```
 
 Here some examples
 
-Example of POST /add
+✉️ Example of POST /product
 ```
+
+Header: Authorization
+
 {
     "name": "titlehere",
     "description": "deschere",
@@ -18,8 +29,17 @@ Example of POST /add
 }
 ```
 
+🔴 Example of DELETE /product/7
+```
 
-Example of GET /getbyid/5
+Header: Authorization
+
+{
+    "message": "[raw meat] has been deleted"
+}
+```
+
+🍃 Example of GET /product/5
 ```
 {
     "product_id": 5,
@@ -29,9 +49,11 @@ Example of GET /getbyid/5
     "category_id": 1,
     "user_id": 1
 }
+
 ```
 
-Example of GET /getbytitle?title=Cream
+🍃 Example of GET /catalog?name=Ice
+
 ```
 [
     {
@@ -53,3 +75,51 @@ Example of GET /getbytitle?title=Cream
 
 ]
 ```
+
+🍃 Example of GET /wallet/0xgj8r03k8tgoiejrg849gj0wrgjowihj
+
+```
+[
+    {
+        "product_id": 3,
+        "name": "Ice Cream",
+        "description": "Source code of the game",
+        "price": 100,
+        "category_id": 1,
+        "user_id": 1
+    },
+    {
+        "product_id": 4,
+        "name": "Ice Cream",
+        "description": "Source code of the game",
+        "price": 100,
+        "category_id": 1,
+        "user_id": 1
+    },
+
+]
+```
+
+🍃 Example of GET /category
+
+```
+[
+    {
+        "category_id": 1,
+        "name": "Source Code",
+        "description": "This is source code"
+    },
+    {
+        "category_id": 2,
+        "name": "Assets",
+        "description": "Category for asset files"
+    },
+    {
+        "category_id": 3,
+        "name": "IP (intellectual privacy)",
+        "description": "Category for intellectual privacy related files"
+    }
+]
+```
+
+
