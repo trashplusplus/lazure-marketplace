@@ -133,6 +133,10 @@ ion-icon {
     gap: 10px;
 }
 
+.wallet-info .menu-header{
+    cursor: context-menu;
+}
+
 .wallet-info-disconnect {
     gap: 10px;
     cursor: pointer;

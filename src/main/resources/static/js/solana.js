@@ -30,6 +30,8 @@ class WalletManager {
                 this.wallet = await window.solana.connect({onlyIfTrusted: false});
                 this.setUserRejected(false);
                 await this.updateDisplayedUserInfo();
+
+                // TODO: Send POST request to /login endpoint
                 return this.wallet;
             } catch (error) {
                 this.handleWalletConnectionError(error);

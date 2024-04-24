@@ -35,7 +35,7 @@
 }
 
 .products-container {
-    left: max(230px, 15%);
+    left: max(230px, 18%);
     position: absolute;
     display: flex;
     flex-wrap: wrap;
