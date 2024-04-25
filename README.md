@@ -2,17 +2,8 @@
 
 All active endpoints: 
 
-Users Controller
+![image](https://github.com/trashplusplus/lazure-marketplace/assets/93054726/4aa1fdb3-ea1a-497f-8e6f-02a2e85699e0)
 
-GET: userscontroller/{walletId}  - Getting a user by its wallet
-POST: userscontroller/login - Identification by login details(a crypto wallet unique id)
+![image](https://github.com/trashplusplus/lazure-marketplace/assets/93054726/1695495a-c3d9-41ef-8200-81adbf0db51e)
 
-Example:
-userscontroller/login
-{
-    "walletId":"somewallet"
-}
-
-Response:
-200("Successful)
 
