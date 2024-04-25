@@ -19,13 +19,10 @@
             _audience = audience;
         }
 
-        public string GenerateToken(string username)
+        public string GenerateToken(string userId)
         {
             var claims = new[]
-            {
-            new Claim(ClaimTypes.Name, username)
-            
-        };
+            { new Claim(ClaimTypes.UserData, userId) };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -34,11 +31,13 @@
                 issuer: _issuer,
                 audience: _audience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(1440), // TOKEN EXPIRY
+                expires: DateTime.Now.AddHours(2), // TOKEN EXPIRY
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        
+
     }
 
 }
