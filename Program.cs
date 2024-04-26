@@ -12,12 +12,8 @@ builder.Services.AddDbContext<LazureDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"))
     .LogTo(Console.WriteLine, LogLevel.Information).EnableSensitiveDataLogging());  //Detailed logging
 
-// Getting key
-var encryptionKey = Environment.GetEnvironmentVariable("ENCRYPTION_KEY"); 
-
+//For the secured connection
 var password = Environment.GetEnvironmentVariable("PASSWORD");
-// Configure CipherService using the key and the password
-builder.Services.AddSingleton(new CipherService(encryptionKey,password));
 
 // JWT AUTH BASIC COFIG
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -44,6 +40,8 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

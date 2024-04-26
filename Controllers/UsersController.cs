@@ -1,6 +1,5 @@
 ﻿using AccountsAPI.DTOs;
 using AccountsAPI.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AccountsAPI.Models;
 
@@ -12,14 +11,14 @@ namespace AccountsAPI.Controllers
     {
         private readonly UserService userService;
         private readonly JwtTokenService jwtTokenService;
-        private readonly CipherService cipherService;
+        private readonly string password;
 
         public UsersController(UserService userService, JwtTokenService jwtTokenService,
-                                CipherService cipherService)
+          string password)
         {
             this.userService = userService;
             this.jwtTokenService = jwtTokenService;
-            this.cipherService = cipherService;
+            this.password = password;
         }
 
         [HttpPost("login")]         //Identification by login details(a crypto wallet unique id)
@@ -52,41 +51,27 @@ namespace AccountsAPI.Controllers
             return Ok(user);
         
         }
-        
+
         private bool IsRequestAuthorized() //Checking decrypted password if attached
-                                            //if the request is authorized
-                                            //in order to ensure secured connection
+                                          //if the request is authorized
+                                          //in order to ensure secured connection
         {
             string header = Request.Headers["Authorization"];
 
             if (string.IsNullOrEmpty(header) || !header.StartsWith("Bearer "))
             {
+                Console.WriteLine("error 1");   //Internal logs
                 return false;
             }
 
-            var token = header.Substring("Bearer ".Length).Trim();
-            if (string.IsNullOrWhiteSpace(token))
+            var recievedPassword = header.Substring("Bearer ".Length).Trim();
+            if (string.IsNullOrWhiteSpace(recievedPassword))
             {
+                Console.WriteLine("error 2");   //Internal logs
                 return false;
             }
 
-            try
-            {
-                string decryptedPassword = cipherService.DecryptCipheredPassword(token);
-                return cipherService.ValidatePassword(decryptedPassword);
-            }
-            catch (FormatException ex)
-            {
-                // Log the exception details for further investigation
-                Console.WriteLine($"Error decrypting password: {ex.Message}");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                // Handle other exceptions if necessary
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-                return false;
-            }
+            return recievedPassword.Equals(password);
         }
 
     }
