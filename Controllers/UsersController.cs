@@ -14,11 +14,11 @@ namespace AccountsAPI.Controllers
         private readonly string password;
 
         public UsersController(UserService userService, JwtTokenService jwtTokenService,
-          string password)
+          IConfiguration configuration)
         {
             this.userService = userService;
             this.jwtTokenService = jwtTokenService;
-            this.password = password;
+            this.password = configuration["PASSWORD"];
         }
 
         [HttpPost("login")]         //Identification by login details(a crypto wallet unique id)
