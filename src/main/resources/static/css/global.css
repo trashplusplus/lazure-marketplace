@@ -7,7 +7,9 @@
     --background-color: #141519;
     --primary-color: #3fb3fc;
     --secondary-color: #1c1d20;
+    --secondary-contrast-color: #222428;
     --highlight-color: #3fb3fc;
+    --highlight-text-color: #96e8ff;
     --border-color: #8d8d8c;
     --href-color: #4343ce;
     --text-color: #8d8d8c;
@@ -41,4 +43,11 @@ body {
 ::-webkit-scrollbar-thumb {
     background-color: var(--secondary-color);
     border-radius: 5px;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: var(--secondary-contrast-color);
+    width: 95%;
 }

@@ -67,6 +67,10 @@ class WalletManager {
         }
     }
 
+    getWalletString() {
+        return this.wallet.publicKey.toString();
+    }
+
     async showWalletInfo() {
         if (!this.wallet) {
             await this.connectWallet();
@@ -77,7 +81,7 @@ class WalletManager {
 
         try {
             const balance = await this.getAccountBalance(this.wallet.publicKey);
-            const shortWalletAddress = this.shortenWalletAddress(this.wallet.publicKey.toString());
+            const shortWalletAddress = this.shortenWalletAddress(this.getWalletString());
             document.getElementById("wallet-short-info").innerText = `${shortWalletAddress} ${balance} SOL`;
         } catch (error) {
             document.getElementById("wallet-short-info").innerText = "Failed to load data";

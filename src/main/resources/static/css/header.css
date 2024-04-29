@@ -48,7 +48,7 @@ ion-icon {
     background-color: var(--secondary-color);
     overflow-x: hidden;
     transition: 0.3s;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
     margin-left: 0;
     z-index: 999;
 }
@@ -76,7 +76,7 @@ ion-icon {
 .menu-header img {
     width: 45px;
 }
-.close-menu {
+.close-button {
     font-size: 36px;
     color: white;
     background: none;
@@ -84,7 +84,7 @@ ion-icon {
     cursor: pointer;
 }
 
-.close-menu:hover {
+.close-button:hover {
     color: var(--highlight-color);
 }
 

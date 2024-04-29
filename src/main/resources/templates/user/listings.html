@@ -17,6 +17,20 @@
 <body>
     <ul class="notifications"></ul>
     <div th:insert="~{parts/_header.html :: header}"></div>
+    <div id="overlay" style="display:none;"></div>
+    <div id="popup" style="display:none;">
+        <button id="close-popup" class="close-popup close-button">&times;</button>
+        <h3 class="popup-name">New Product</h3>
+        <hr>
+        <form th:action="@{/api/listings/new}" th:object="${product}" method="post">
+            <p>Name:<span class="required-field-mark">*</span> <input type="text" placeholder="Your product name" th:field="*{name}" required/></p>
+            <p>Description: <input type="text" placeholder="Something special?" th:field="*{description}"/></p>
+            <p>Price:<span class="required-field-mark">*</span> <input type="text" placeholder="For now it's free...lol" th:field="*{price}" required/></p>
+            <p>Resource Link:<span class="required-field-mark">*</span> <input type="text" placeholder="What you want to sell?" th:field="*{resourceLink}" required/></p>
+            <input type="hidden" id="walletField" th:field="*{wallet}">
+            <p><input type="submit" value="Submit" /></p>
+        </form>
+    </div>
 
     <div class="add-product product" id="add-product">
         <img src="/img/add.png" alt="add">
