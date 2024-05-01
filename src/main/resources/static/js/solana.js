@@ -5,7 +5,14 @@ class WalletManager {
     constructor() {
         this.wallet = null;
         this.connection = null;
-        this.init().then(r => console.log());
+        this.walletReady = new Promise((resolve, reject) => {
+            this.resolveWalletReady = resolve;
+            this.rejectWalletReady = reject;
+        });
+        this.init().then(() => this.resolveWalletReady()).catch(error => {
+            console.error("Initialization failed:", error);
+            this.rejectWalletReady(error);
+        });
     }
 
     async init() {
@@ -16,8 +23,14 @@ class WalletManager {
                 await this.updateDisplayedUserInfo();
             }
         } catch (error) {
-            console.error("Initialization failed:", error);
+            throw error;
         }
+    }
+
+    onWalletReady(callback) {
+        this.walletReady.then(callback).catch(error => {
+            console.error("Wallet not ready:", error);
+        });
     }
 
     getSolanaConnection() {

@@ -203,10 +203,13 @@ input[type="submit"]:hover {
 }
 .custom-option {
     position: relative;
-    display: block;
     color: var(--text-color);
     cursor: pointer;
     padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
 }
 .custom-option:hover {
     background-color: var(--secondary-contrast-color);
@@ -243,4 +246,10 @@ input[type="submit"]:hover {
 }
 .custom-select.open .arrow:after {
     transform: rotate(45deg);
+}
+
+.info-icon {
+    cursor: help;
+    width: 16px;
+    height: 16px;
 }

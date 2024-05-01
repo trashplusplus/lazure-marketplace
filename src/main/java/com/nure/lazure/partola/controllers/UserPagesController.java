@@ -20,6 +20,7 @@ public class UserPagesController {
 
     @GetMapping("/profile/{wallet}")
     public String profile(@PathVariable String wallet) {
+        System.out.println(wallet);
         return "user/profile";
     }
 

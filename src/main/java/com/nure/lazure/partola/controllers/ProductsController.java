@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -12,11 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 /**
  * @author Ivan Partola
  */
 @RequiredArgsConstructor
-@RequestMapping("/api/listings")
+@RequestMapping("/api/products")
 @RestController
 public class ProductsController {
     private final RestTemplate restTemplate;
@@ -46,4 +49,19 @@ public class ProductsController {
         }
     }
 
+    @GetMapping("/wallet/{wallet}")
+    public ResponseEntity<?> getAllProductsByWallet(@PathVariable String wallet) {
+        try {
+            String url = "https://productsapi-954ed826b909.herokuapp.com/wallet/" + wallet;
+            ResponseEntity<List<Product>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<>() {}
+            );
+            return ResponseEntity.ok(response.getBody());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error while retrieving products.");
+        }
+    }
 }

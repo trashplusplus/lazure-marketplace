@@ -22,7 +22,7 @@
         <button id="close-popup" class="close-popup close-button">&times;</button>
         <h3 class="popup-name">New Product</h3>
         <hr>
-        <form th:action="@{/api/listings/new}" th:object="${product}" method="post">
+        <form th:action="@{/api/products/new}" th:object="${product}" method="post">
             <p>Name:<span class="required-field-mark">*</span> <input type="text" placeholder="Your product name" th:field="*{name}" required/></p>
             <p>Description: <textarea placeholder="Something special?" th:field="*{description}"></textarea></p>
             <p>Type:<span class="required-field-mark">*</span>
@@ -31,16 +31,13 @@
                     <div class="custom-select__trigger"><span>Product type...</span>
                         <div class="arrow"></div>
                     </div>
-                    <div class="custom-options">
-
-                    </div>
+                    <div class="custom-options"></div>
                 </div>
             </div>
             </p>
             <input type="hidden" id="categoryId" th:field="*{categoryId}" required>
-            <p>Price:<span class="required-field-mark">*</span> <input type="text" placeholder="For now it's free...lol" th:field="*{price}" required/></p>
+            <p>Price (SOL):<span class="required-field-mark">*</span> <input type="text" placeholder="For now it's free...lol" th:field="*{price}" required/></p>
             <p>Resource Link:<span class="required-field-mark">*</span> <input type="text" placeholder="What you want to sell?" th:field="*{resourceLink}" required/></p>
-            <!--<input type="hidden" id="walletField" th:field="*{wallet}">-->
             <p><input type="submit" value="Submit" /></p>
         </form>
     </div>
@@ -48,217 +45,41 @@
     <div class="add-product product" id="add-product">
         <img src="/img/add.png" alt="add">
     </div>
-    <div class="products-container">
+
+    <div class="products-container loader" style="display: flex;">
         <div class="product">
-            <img src="/img/code.png" alt="add">
             <div class="short-product-info">
-                <p>Code</p>
-                <p><span class="price">152</span> SOL</p>
+                <div class="loader-spinner"></div>
             </div>
         </div>
         <div class="product">
-            <img src="/img/intellectual-property.png" alt="add">
             <div class="short-product-info">
-                <p>Intellectual Property</p>
-                <p><span class="price">252</span> SOL</p>
+                <div class="loader-spinner"></div>
             </div>
         </div>
         <div class="product">
-            <img src="/img/asset.png" alt="add">
             <div class="short-product-info">
-                <p>Asset</p>
-                <p><span class="price">352</span> SOL</p>
+                <div class="loader-spinner"></div>
             </div>
         </div>
         <div class="product">
-            <img src="/img/code.png" alt="add">
             <div class="short-product-info">
-                <p>Code</p>
-                <p><span class="price">152</span> SOL</p>
+                <div class="loader-spinner"></div>
             </div>
         </div>
         <div class="product">
-            <img src="/img/intellectual-property.png" alt="add">
             <div class="short-product-info">
-                <p>Intellectual Property</p>
-                <p><span class="price">252</span> SOL</p>
+                <div class="loader-spinner"></div>
             </div>
         </div>
         <div class="product">
-            <img src="/img/asset.png" alt="add">
             <div class="short-product-info">
-                <p>Asset</p>
-                <p><span class="price">352</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/code.png" alt="add">
-            <div class="short-product-info">
-                <p>Code</p>
-                <p><span class="price">152</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/intellectual-property.png" alt="add">
-            <div class="short-product-info">
-                <p>Intellectual Property</p>
-                <p><span class="price">252</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/asset.png" alt="add">
-            <div class="short-product-info">
-                <p>Asset</p>
-                <p><span class="price">352</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/code.png" alt="add">
-            <div class="short-product-info">
-                <p>Code</p>
-                <p><span class="price">152</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/intellectual-property.png" alt="add">
-            <div class="short-product-info">
-                <p>Intellectual Property</p>
-                <p><span class="price">252</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/asset.png" alt="add">
-            <div class="short-product-info">
-                <p>Asset</p>
-                <p><span class="price">352</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/code.png" alt="add">
-            <div class="short-product-info">
-                <p>Code</p>
-                <p><span class="price">152</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/intellectual-property.png" alt="add">
-            <div class="short-product-info">
-                <p>Intellectual Property</p>
-                <p><span class="price">252</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/asset.png" alt="add">
-            <div class="short-product-info">
-                <p>Asset</p>
-                <p><span class="price">352</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/code.png" alt="add">
-            <div class="short-product-info">
-                <p>Code</p>
-                <p><span class="price">152</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/intellectual-property.png" alt="add">
-            <div class="short-product-info">
-                <p>Intellectual Property</p>
-                <p><span class="price">252</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/asset.png" alt="add">
-            <div class="short-product-info">
-                <p>Asset</p>
-                <p><span class="price">352</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/code.png" alt="add">
-            <div class="short-product-info">
-                <p>Code</p>
-                <p><span class="price">152</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/intellectual-property.png" alt="add">
-            <div class="short-product-info">
-                <p>Intellectual Property</p>
-                <p><span class="price">252</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/asset.png" alt="add">
-            <div class="short-product-info">
-                <p>Asset</p>
-                <p><span class="price">352</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/code.png" alt="add">
-            <div class="short-product-info">
-                <p>Code</p>
-                <p><span class="price">152</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/intellectual-property.png" alt="add">
-            <div class="short-product-info">
-                <p>Intellectual Property</p>
-                <p><span class="price">252</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/asset.png" alt="add">
-            <div class="short-product-info">
-                <p>Asset</p>
-                <p><span class="price">352</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/code.png" alt="add">
-            <div class="short-product-info">
-                <p>Code</p>
-                <p><span class="price">152</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/intellectual-property.png" alt="add">
-            <div class="short-product-info">
-                <p>Intellectual Property</p>
-                <p><span class="price">252</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/asset.png" alt="add">
-            <div class="short-product-info">
-                <p>Asset</p>
-                <p><span class="price">352</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/code.png" alt="add">
-            <div class="short-product-info">
-                <p>Code</p>
-                <p><span class="price">152</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/intellectual-property.png" alt="add">
-            <div class="short-product-info">
-                <p>Intellectual Property</p>
-                <p><span class="price">252</span> SOL</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="/img/asset.png" alt="add">
-            <div class="short-product-info">
-                <p>Asset</p>
-                <p><span class="price">352</span> SOL</p>
+                <div class="loader-spinner"></div>
             </div>
         </div>
     </div>
+
+    <div class="products-container main-products-container"> </div>
+
 </body>
 </html>

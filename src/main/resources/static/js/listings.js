@@ -21,6 +21,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 option.setAttribute('data-value', category.category_id);
                 option.textContent = category.name;
 
+                // Создаем элемент изображения
+                const infoIcon = document.createElement('img');
+                infoIcon.src = 'img/info.png'; // Путь к вашему изображению
+                infoIcon.alt = 'Info';
+                infoIcon.className = 'info-icon';
+                infoIcon.title = category.description; // Описание категории во всплывающей подсказке
+
+                // Добавляем обработчик наведения мыши, если нужен более сложный tooltip
+                infoIcon.addEventListener('mouseenter', function() {
+                    // Здесь можно добавить функционал для сложного tooltip, если атрибут title не подходит
+                });
+
+                // Добавляем элемент изображения к опции
+                option.appendChild(infoIcon);
+
                 option.addEventListener('click', function() {
                     let selectedValue = this.getAttribute('data-value');
                     let hiddenInput = document.querySelector('input[name="categoryId"]');
@@ -37,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Failed to fetch categories:', error);
         });
 });
+
 
 
 function toggleDropdown() {
@@ -92,6 +108,7 @@ document.querySelector('form').addEventListener('submit', function(event) {
         })
         .then(text => {
             createToast("success", text);
+            loadListings();
         })
         .catch(error => {
             createToast("warning", error);
@@ -108,3 +125,71 @@ document.getElementById("close-popup").addEventListener('click', function() {
     document.getElementById("overlay").style.display = 'none';
     document.getElementById("popup").style.display = 'none';
 });
+
+document.addEventListener('DOMContentLoaded', loadListings);
+
+function loadListings() {
+    const walletManager = new WalletManager();
+    const loader = document.querySelector('.loader');
+    const container = document.querySelector('.main-products-container');
+    loader.style.display = 'flex';
+
+    walletManager.onWalletReady(() => {
+        fetch('api/products/wallet/' + walletManager.getWalletString())
+            .then(response => response.json())
+            .then(data => {
+                loader.style.display = 'none';
+                container.innerHTML = '';
+                if (data.length === 0) {
+                    container.textContent = 'There are no listings yet :(';
+                } else {
+                    data.forEach(product => {
+                        container.appendChild(createProductElement(product));
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading the products:', error);
+                loader.style.display = 'none';
+                container.textContent = 'Failed to load products.';
+            });
+    });
+}
+
+
+function createProductElement(product) {
+    const productDiv = document.createElement('div');
+    productDiv.className = 'product';
+
+    const imageMap = {
+        1: 'code.png',
+        2: 'asset.png',
+        3: 'intellectual-property.png',
+        4: 'coupon.png'
+    };
+
+    const img = document.createElement('img');
+    img.src = `/img/${imageMap[product.category_id] || 'logo.png'}`;
+    img.alt = product.name;
+
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'short-product-info';
+
+    const nameP = document.createElement('p');
+    nameP.id = 'name';
+    nameP.textContent = product.name;
+
+    const priceP = document.createElement('p');
+    const priceSpan = document.createElement('span');
+    priceSpan.className = 'price';
+    priceSpan.textContent = product.price.toFixed(2);
+    priceP.appendChild(priceSpan);
+    priceP.append(' SOL');
+
+    infoDiv.appendChild(nameP);
+    infoDiv.appendChild(priceP);
+    productDiv.appendChild(img);
+    productDiv.appendChild(infoDiv);
+
+    return productDiv;
+}
