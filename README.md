@@ -25,6 +25,7 @@ Header: Authorization
     "description": "deschere",
     "price": 999.999,
     "resource_link": "https://example.com/",
+    "category_id": 1,
     "user_id": 1
 }
 ```
