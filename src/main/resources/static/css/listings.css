@@ -123,6 +123,8 @@ input[type="text"], input[type="submit"] {
 input[type="text"] {
     background-color: var(--background-color);
     color: var(--text-color);
+    font-family: monospace;
+    font-size: 14px;
 }
 
 input[type="submit"] {
@@ -146,4 +148,83 @@ input[type="submit"]:hover {
 .required-field-mark {
     color: red;
     font-size: 20px;
+}
+
+.custom-select-wrapper {
+    font-family: monospace;
+    position: relative;
+    user-select: none;
+    font-size: 14px;
+}
+.custom-select {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.custom-select__trigger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px;
+}
+.custom-options {
+    position: absolute;
+    display: none;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 5px;
+    background-color: var(--background-color);
+    z-index: 5;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 0 4px white;
+}
+.custom-option {
+    position: relative;
+    display: block;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 10px;
+}
+.custom-option:hover {
+    background-color: var(--secondary-contrast-color);
+    color: white;
+}
+.arrow {
+    position: relative;
+    height: 7px;
+    width: 7px;
+}
+.arrow:before, .arrow:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 0.15rem;
+    height: 100%;
+    transition: all 0.3s;
+}
+.arrow:before {
+    left: 5px;
+    transform: rotate(45deg);
+    background-color: var(--text-color);
+}
+.arrow:after {
+    left: 8px;
+    transform: rotate(-45deg);
+    background-color: var(--text-color);
+}
+.custom-select.open .custom-options {
+    display: block;
+}
+.custom-select.open .arrow:before {
+    transform: rotate(-45deg);
+}
+.custom-select.open .arrow:after {
+    transform: rotate(45deg);
 }

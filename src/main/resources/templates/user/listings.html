@@ -25,6 +25,21 @@
         <form th:action="@{/api/listings/new}" th:object="${product}" method="post">
             <p>Name:<span class="required-field-mark">*</span> <input type="text" placeholder="Your product name" th:field="*{name}" required/></p>
             <p>Description: <input type="text" placeholder="Something special?" th:field="*{description}"/></p>
+            <p>Type:<span class="required-field-mark">*</span>
+            <div class="custom-select-wrapper" onclick="toggleDropdown()">
+                <div class="custom-select">
+                    <div class="custom-select__trigger"><span>Product type...</span>
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="custom-options">
+                        <span class="custom-option selected" data-value="1">Source Code</span>
+                        <span class="custom-option" data-value="2">Asset</span>
+                        <span class="custom-option" data-value="3">Intellectual Property</span>
+                    </div>
+                </div>
+            </div>
+            </p>
+            <input type="hidden" id="type" th:field="*{type}" required>
             <p>Price:<span class="required-field-mark">*</span> <input type="text" placeholder="For now it's free...lol" th:field="*{price}" required/></p>
             <p>Resource Link:<span class="required-field-mark">*</span> <input type="text" placeholder="What you want to sell?" th:field="*{resourceLink}" required/></p>
             <input type="hidden" id="walletField" th:field="*{wallet}">

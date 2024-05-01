@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class Product {
     private String name;
     private String description;
+    private String type;
     private Double price;
     private String resourceLink;
     private String wallet;
