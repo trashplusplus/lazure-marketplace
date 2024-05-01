@@ -43,12 +43,12 @@ document.getElementById("close-popup").addEventListener('click', function() {
 
 document.querySelector('form').addEventListener('submit', function(event) {
     event.preventDefault();
-    try {
+    /*try {
         document.getElementById('walletField').value = walletManager.getWalletString();
     } catch (error) {
         createToast("warning", "Please, connect your wallet first.");
         return;
-    }
+    }*/
 
     let type = document.querySelector('input[name="type"]');
     if (!type.value) {

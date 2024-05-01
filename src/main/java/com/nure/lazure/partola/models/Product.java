@@ -16,5 +16,4 @@ public class Product {
     private String type;
     private Double price;
     private String resourceLink;
-    private String wallet;
 }
