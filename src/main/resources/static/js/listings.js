@@ -21,19 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 option.setAttribute('data-value', category.category_id);
                 option.textContent = category.name;
 
-                // Создаем элемент изображения
                 const infoIcon = document.createElement('img');
-                infoIcon.src = 'img/info.png'; // Путь к вашему изображению
+                infoIcon.src = 'img/info.png';
                 infoIcon.alt = 'Info';
                 infoIcon.className = 'info-icon';
-                infoIcon.title = category.description; // Описание категории во всплывающей подсказке
+                infoIcon.title = category.description;
 
-                // Добавляем обработчик наведения мыши, если нужен более сложный tooltip
-                infoIcon.addEventListener('mouseenter', function() {
-                    // Здесь можно добавить функционал для сложного tooltip, если атрибут title не подходит
-                });
+                //infoIcon.addEventListener('mouseenter', function() {});
 
-                // Добавляем элемент изображения к опции
                 option.appendChild(infoIcon);
 
                 option.addEventListener('click', function() {
@@ -132,10 +127,9 @@ function loadListings() {
     const walletManager = new WalletManager();
     const loader = document.querySelector('.loader');
     const container = document.querySelector('.main-products-container');
-    loader.style.display = 'flex';
 
-    walletManager.onWalletReady(() => {
-        fetch('api/products/wallet/' + walletManager.getWalletString())
+    walletManager.onWalletReady((wallet) => {
+        fetch('api/products/wallet/' + wallet)
             .then(response => response.json())
             .then(data => {
                 loader.style.display = 'none';

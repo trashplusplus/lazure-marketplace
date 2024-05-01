@@ -1,18 +1,13 @@
 const SOLANA_NET = 'devnet';
 const LOCALSTORAGE_USER_REJECTED_ID = 'userRejectedWalletConnection';
 
+let subscribers = [];
+
 class WalletManager {
     constructor() {
         this.wallet = null;
         this.connection = null;
-        this.walletReady = new Promise((resolve, reject) => {
-            this.resolveWalletReady = resolve;
-            this.rejectWalletReady = reject;
-        });
-        this.init().then(() => this.resolveWalletReady()).catch(error => {
-            console.error("Initialization failed:", error);
-            this.rejectWalletReady(error);
-        });
+        this.init();
     }
 
     async init() {
@@ -23,14 +18,25 @@ class WalletManager {
                 await this.updateDisplayedUserInfo();
             }
         } catch (error) {
-            throw error;
+            console.error("Initialization failed:", error);
         }
     }
 
     onWalletReady(callback) {
-        this.walletReady.then(callback).catch(error => {
-            console.error("Wallet not ready:", error);
-        });
+        if (this.wallet) {
+            callback();
+        } else {
+            subscribers.push(callback);
+        }
+    }
+
+    notifySubscribers() {
+        if (!this.wallet) {
+            createToast("warning", "Wallet not ready yet.");
+            return;
+        }
+        subscribers.forEach(callback => callback(this.getWalletString()));
+        subscribers = [];
     }
 
     getSolanaConnection() {
@@ -51,7 +57,6 @@ class WalletManager {
                 }
             })
             .catch(error => {
-                //console.error('Error:', error);
                 throw new Error("Error while getting login data.");
             });
     }
@@ -63,6 +68,8 @@ class WalletManager {
                 this.setUserRejected(false);
                 await this.updateDisplayedUserInfo();
                 this.sendLoginRequest();
+
+                this.notifySubscribers();
 
                 return this.wallet;
             } catch (error) {
