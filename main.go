@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,6 +25,8 @@ func main() {
 	}
 
 	r := gin.Default()
+	r.Use(cors.Default())
+
 	r.GET("/", func(c *gin.Context) {
 		c.IndentedJSON(200, gin.H{"message": "productAPI of lazure-marketplace"})
 	})
@@ -58,12 +61,24 @@ func AddProductHandler(db *sql.DB) gin.HandlerFunc {
 
 		//isvalid
 		if token.Valid {
-			_, ok := token.Claims.(jwt.MapClaims)
+			claims, ok := token.Claims.(jwt.MapClaims)
 			if !ok {
 				log.Println("invalid token claims: ", err)
 				c.IndentedJSON(401, gin.H{"message": "Invalid token claims"})
 				return
 			}
+
+			userId := claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata"].(string)
+			log.Println("userId: ", userId)
+
+			n, err := strconv.Atoi(userId)
+			if err != nil {
+				log.Println("Error: ", err)
+				return
+			}
+
+			product.User_Id = n
+
 		} else {
 			return
 		}
@@ -142,6 +157,7 @@ func GetAllCategoriesHandler(db *sql.DB) gin.HandlerFunc {
 
 func DeleteProductByIdHandler(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		var ownerId int
 		idStr := c.Param("id")
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
@@ -155,15 +171,26 @@ func DeleteProductByIdHandler(db *sql.DB) gin.HandlerFunc {
 		}
 
 		if token.Valid {
-			_, ok := token.Claims.(jwt.MapClaims)
+			claims, ok := token.Claims.(jwt.MapClaims)
 			if !ok {
 				log.Println("invalid token claims: ", err)
 				c.JSON(401, gin.H{"message": "Invalid token claims"})
 				return
 			}
+
+			userId := claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata"].(string)
+			log.Println("userId: ", userId)
+
+			n, err := strconv.Atoi(userId)
+			if err != nil {
+				log.Println("Error: ", err)
+				return
+			}
+			ownerId = n
+
 		}
 
-		productName, err := DeleteProductById(db, id)
+		productName, err := DeleteProductById(db, id, ownerId)
 		if err != nil {
 			c.JSON(404, gin.H{"message": "Product wasn't deleted"})
 		} else {

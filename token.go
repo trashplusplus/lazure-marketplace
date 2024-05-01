@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -10,18 +11,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ExtractToken(authHeader string) (string, bool) {
-
+func ExtractToken(authHeader string) string {
 	if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
-		return "", false
+		return ""
 	}
 
-	token := strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))
-	if token == "" {
-		return "", false
-	}
-
-	return token, true
+	token := authHeader[len("Bearer "):]
+	return token
 }
 
 func ParseJWTToken(tokenString string) (*jwt.Token, error) {
@@ -31,7 +27,6 @@ func ParseJWTToken(tokenString string) (*jwt.Token, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-
 		return signatureKey, nil
 	})
 
@@ -49,8 +44,9 @@ func ValidateToken(c *gin.Context) (*jwt.Token, error) {
 		return nil, errors.New("authorization header is missing")
 	}
 
-	token, err := ParseJWTToken(authHeader)
+	token, err := ParseJWTToken(ExtractToken(authHeader))
 	if err != nil {
+		log.Println("TOKEN SUKA: ", token)
 		return nil, errors.New("invalid token")
 	}
 

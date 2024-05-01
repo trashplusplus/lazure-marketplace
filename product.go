@@ -138,18 +138,19 @@ func GetAllCategories(db *sql.DB) ([]Category, error) {
 	return categories, nil
 }
 
-func DeleteProductById(db *sql.DB, product_id int) (string, error) {
+func DeleteProductById(db *sql.DB, product_id int, user_id int) (string, error) {
 	var productName string
-	//todo validating by TOKEN
-	err := db.QueryRow("SELECT name FROM Products WHERE product_id = $1", product_id).Scan(&productName)
+
+	err := db.QueryRow("SELECT name FROM Products WHERE product_id = $1 AND user_id = $2", product_id, user_id).Scan(&productName)
 	if err != nil {
-		log.Println("DeleteProductById error: ", err)
+		log.Println("DeleteProductById error:", err)
 		return "", err
 	}
 
-	_, err = db.Exec("DELETE FROM Products WHERE product_id = $1", product_id)
+	_, err = db.Exec("DELETE FROM Products WHERE product_id = $1 AND user_id = $2", product_id, user_id)
 	if err != nil {
-		log.Println("DeleteProductById error: ", err)
+		log.Println("DeleteProductById error:", err)
+		return "", err
 	}
 
 	return productName, nil
