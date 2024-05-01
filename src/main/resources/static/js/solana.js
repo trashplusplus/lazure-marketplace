@@ -24,14 +24,33 @@ class WalletManager {
         return new solanaWeb3.Connection(solanaWeb3.clusterApiUrl(SOLANA_NET), 'confirmed');
     }
 
+    sendLoginRequest() {
+        fetch('/api/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ walletId: this.getWalletString() })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+            })
+            .catch(error => {
+                //console.error('Error:', error);
+                throw new Error("Error while getting login data.");
+            });
+    }
+
     async connectWallet() {
         if (window.solana && window.solana.isPhantom) {
             try {
                 this.wallet = await window.solana.connect({onlyIfTrusted: false});
                 this.setUserRejected(false);
                 await this.updateDisplayedUserInfo();
+                this.sendLoginRequest();
 
-                // TODO: Send POST request to /login endpoint
                 return this.wallet;
             } catch (error) {
                 this.handleWalletConnectionError(error);

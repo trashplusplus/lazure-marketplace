@@ -1,5 +1,6 @@
 package com.nure.lazure.partola.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,11 @@ import lombok.NoArgsConstructor;
 public class Product {
     private String name;
     private String description;
-    private String type;
     private Double price;
+
+    @JsonProperty("resource_link")
     private String resourceLink;
+
+    @JsonProperty("category_id")
+    private Integer categoryId;
 }

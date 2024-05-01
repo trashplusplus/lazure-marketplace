@@ -89,6 +89,7 @@
     transition: transform 0.3s, opacity 0.3s;
     z-index: 1001;
     max-height: 100%;
+    overflow: auto;
 }
 
 #overlay.hidden, #popup.hidden {

@@ -32,14 +32,12 @@
                         <div class="arrow"></div>
                     </div>
                     <div class="custom-options">
-                        <span class="custom-option selected" data-value="1">Source Code</span>
-                        <span class="custom-option" data-value="2">Asset</span>
-                        <span class="custom-option" data-value="3">Intellectual Property</span>
+
                     </div>
                 </div>
             </div>
             </p>
-            <input type="hidden" id="type" th:field="*{type}" required>
+            <input type="hidden" id="categoryId" th:field="*{categoryId}" required>
             <p>Price:<span class="required-field-mark">*</span> <input type="text" placeholder="For now it's free...lol" th:field="*{price}" required/></p>
             <p>Resource Link:<span class="required-field-mark">*</span> <input type="text" placeholder="What you want to sell?" th:field="*{resourceLink}" required/></p>
             <!--<input type="hidden" id="walletField" th:field="*{wallet}">-->
