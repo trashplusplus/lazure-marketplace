@@ -254,3 +254,13 @@ input[type="submit"]:hover {
     width: 16px;
     height: 16px;
 }
+
+.static-message {
+    font-size: 20px;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+}

@@ -66,6 +66,7 @@ ion-icon {
     align-items: center;
     padding: 12px;
 }
+
 .side-menu ion-icon {
     font-size: 20px;
 }
@@ -142,6 +143,7 @@ ion-icon {
     cursor: pointer;
     border-radius: 10px;
     margin-left: 15px;
+    margin-top: 10px;
 }
 
 .wallet-info-disconnect:hover {

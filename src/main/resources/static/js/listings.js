@@ -27,8 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 infoIcon.className = 'info-icon';
                 infoIcon.title = category.description;
 
-                //infoIcon.addEventListener('mouseenter', function() {});
-
                 option.appendChild(infoIcon);
 
                 option.addEventListener('click', function() {
@@ -124,7 +122,6 @@ document.getElementById("close-popup").addEventListener('click', function() {
 document.addEventListener('DOMContentLoaded', loadListings);
 
 function loadListings() {
-    const walletManager = new WalletManager();
     const loader = document.querySelector('.loader');
     const container = document.querySelector('.main-products-container');
 
@@ -135,7 +132,20 @@ function loadListings() {
                 loader.style.display = 'none';
                 container.innerHTML = '';
                 if (data.length === 0) {
-                    container.textContent = 'There are no listings yet :(';
+                    const img = document.createElement('img');
+                    img.src = "/img/broken-image.png";
+                    img.alt = "no image lol";
+                    const productDiv = document.createElement('div');
+                    productDiv.className = 'product';
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'short-product-info';
+                    const nameP = document.createElement('p');
+                    nameP.textContent = "No listings found";
+                    infoDiv.appendChild(nameP);
+                    productDiv.appendChild(img);
+                    productDiv.appendChild(infoDiv);
+
+                    container.appendChild(productDiv);
                 } else {
                     data.forEach(product => {
                         container.appendChild(createProductElement(product));
@@ -143,9 +153,8 @@ function loadListings() {
                 }
             })
             .catch(error => {
-                console.error('Error loading the products:', error);
                 loader.style.display = 'none';
-                container.textContent = 'Failed to load products.';
+                createToast("error", "Failed to load products.");
             });
     });
 }

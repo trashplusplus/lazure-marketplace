@@ -36,7 +36,7 @@ class WalletManager {
             return;
         }
         subscribers.forEach(callback => callback(this.getWalletString()));
-        subscribers = [];
+        //subscribers = [];
     }
 
     getSolanaConnection() {
@@ -137,7 +137,6 @@ class WalletManager {
         if (window.solana && window.solana.isPhantom) {
             try {
                 await window.solana.disconnect();
-                createToast("info", "Wallet was successfully disconnected!");
                 document.getElementById("balance").innerText = "Connect Wallet";
                 document.getElementById('wallet-info').classList.remove("open-wallet-info");
                 let profileURL = document.getElementById("profile");
@@ -146,6 +145,14 @@ class WalletManager {
                 this.wallet = null;
                 this.connection = null;
                 this.setUserRejected(true);
+                fetch("/api/users/logout", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => response.text())
+                    .then(() => createToast("info", "Wallet was successfully disconnected!"))
+                    .catch(error => createToast("error", `Error disconnecting wallet: ${error}`));
             } catch (error) {
                 createToast("error", `Error disconnecting wallet: ${error}`);
             }
