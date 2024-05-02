@@ -1,5 +1,6 @@
 package com.nure.lazure.partola.controllers;
 
+import com.nure.lazure.partola.models.Category;
 import com.nure.lazure.partola.models.Product;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +63,22 @@ public class ProductsController {
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error while retrieving products.");
+        }
+    }
+
+    @GetMapping("/category")
+    public ResponseEntity<?> getCategories() {
+        try {
+            String url = "https://productsapi-954ed826b909.herokuapp.com/category";
+            ResponseEntity<List<Category>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<>() {}
+            );
+            return ResponseEntity.ok(response.getBody());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error while getting categories.");
         }
     }
 }

@@ -4,7 +4,7 @@ document.getElementById("add-product").addEventListener('click', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('https://productsapi-954ed826b909.herokuapp.com/category')
+    fetch('api/products/category')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok: ' + response.statusText);
