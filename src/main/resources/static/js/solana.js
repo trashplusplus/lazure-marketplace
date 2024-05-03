@@ -2,7 +2,6 @@ const SOLANA_NET = 'devnet';
 const LOCALSTORAGE_USER_REJECTED_ID = 'userRejectedWalletConnection';
 
 let subscribers = [];
-
 class WalletManager {
     constructor() {
         this.wallet = null;
@@ -87,7 +86,7 @@ class WalletManager {
         let profileURL = document.getElementById("profile");
         const balance = await this.getAccountBalance(wallet);
 
-        document.getElementById("balance").innerText = `${balance} SOL`;
+        document.getElementById("balance").innerText = `${parseFloat(balance).toFixed(2)} SOL`;
 
         profileURL.innerText = this.shortenWalletAddress(wallet.toString());
         profileURL.href = "/profile/" + wallet.toString();
@@ -121,13 +120,46 @@ class WalletManager {
         try {
             const balance = await this.getAccountBalance(this.wallet.publicKey);
             const shortWalletAddress = this.shortenWalletAddress(this.getWalletString());
-            document.getElementById("wallet-short-info").innerText = `${shortWalletAddress} ${balance} SOL`;
+            document.getElementById("wallet-short-info").innerText = `${shortWalletAddress} ${parseFloat(balance).toFixed(2)} SOL`;
         } catch (error) {
             document.getElementById("wallet-short-info").innerText = "Failed to load data";
             console.error("Failed to load wallet info:", error);
         }
     }
 
+    async transferSol(recipientWalletAddress, amount) {
+        try {
+            const { solana } = window;
+            if (solana && solana.isPhantom) {
+                const provider = solana;
+                await provider.connect({ onlyIfTrusted: false });
+                const connection = walletManager.getSolanaConnection();
+                const transaction = new solanaWeb3.Transaction().add(
+                    solanaWeb3.SystemProgram.transfer({
+                        fromPubkey: provider.publicKey,
+                        toPubkey: recipientWalletAddress,
+                        lamports: amount * 1000000000
+                    })
+                );
+
+                let { blockhash } = await connection.getRecentBlockhash();
+                transaction.recentBlockhash = blockhash;
+                transaction.feePayer = provider.publicKey;
+
+                let signed = await provider.signTransaction(transaction);
+                let signature = await connection.sendRawTransaction(signed.serialize());
+                await connection.confirmTransaction(signature);
+                //console.log('Transaction successful:', signature);
+                createToast("success", `You successfully sent ${amount} to ${this.shortenWalletAddress(recipientWalletAddress)}!`)
+                let balance = await this.getAccountBalance(this.wallet.publicKey);
+                document.getElementById("balance").innerText = `${parseFloat(balance).toFixed(2)} SOL`;
+            } else {
+                createToast("warning",'Phantom wallet not found!');
+            }
+        } catch (error) {
+            createToast("error",'Error while sending your sol.');
+        }
+    }
 
     shortenWalletAddress(fullAddress) {
         return fullAddress.length > 8 ? `${fullAddress.slice(0, 5)}...${fullAddress.slice(-3)}` : fullAddress;
