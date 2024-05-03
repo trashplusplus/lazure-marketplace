@@ -132,13 +132,12 @@ func GetProductsByTitleHandler(db *sql.DB) gin.HandlerFunc {
 func GetProductsByWalletIdHandler(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		walletId := c.Param("walletId")
-		product, err := GetProductsByWalletId(db, walletId)
-		if err != nil {
-			log.Println("Error: ", err)
-			c.JSON(404, gin.H{"message": "No products by that walletId was found"})
-		} else {
-			c.IndentedJSON(200, product)
+		products, _ := GetProductsByWalletId(db, walletId)
+		if len(products) == 0 {
+			c.JSON(200, []ProductToBuy{})
+			return
 		}
+		c.IndentedJSON(200, products)
 
 	}
 }

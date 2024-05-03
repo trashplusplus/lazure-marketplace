@@ -106,8 +106,8 @@ func GetProductsByWalletId(db *sql.DB, walletId string) ([]ProductToBuy, error) 
 		products = append(products, product)
 	}
 
-	if products == nil {
-		return nil, sql.ErrNoRows
+	if len(products) == 0 {
+		return []ProductToBuy{}, sql.ErrNoRows
 	}
 
 	return products, nil
