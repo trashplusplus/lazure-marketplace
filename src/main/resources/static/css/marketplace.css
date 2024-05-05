@@ -52,17 +52,6 @@
     border-radius: 7px 0 0 7px;
 }
 
-.search-config img {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translate(-175%, -50%);
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    z-index: 1000;
-}
-
 .search-config-form {
     display: flex;
     flex-direction: column;
