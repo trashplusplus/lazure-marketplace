@@ -34,8 +34,7 @@ class WalletManager {
             createToast("warning", "Wallet not ready yet.");
             return;
         }
-        subscribers.forEach(callback => callback(this.getWalletString()));
-        //subscribers = [];
+        subscribers.forEach(callback => callback());
     }
 
     getSolanaConnection() {

@@ -101,7 +101,7 @@ document.querySelector('form').addEventListener('submit', function(event) {
         })
         .then(text => {
             createToast("success", text);
-            loadListings();
+            getAllListingsByWallet();
         })
         .catch(error => {
             createToast("warning", error);
@@ -122,43 +122,45 @@ document.getElementById("close-popup").addEventListener('click', function() {
 document.addEventListener('DOMContentLoaded', loadListings);
 
 function loadListings() {
-    const loader = document.querySelector('.loader');
-    const container = document.querySelector('.main-products-container');
-
-    walletManager.onWalletReady((wallet) => {
-        fetch('api/products/wallet/' + wallet)
-            .then(response => response.json())
-            .then(data => {
-                loader.style.display = 'none';
-                container.innerHTML = '';
-                if (data.length === 0) {
-                    const img = document.createElement('img');
-                    img.src = "/img/broken-image.png";
-                    img.alt = "no image lol";
-                    const productDiv = document.createElement('div');
-                    productDiv.className = 'product';
-                    const infoDiv = document.createElement('div');
-                    infoDiv.className = 'short-product-info';
-                    const nameP = document.createElement('p');
-                    nameP.textContent = "No listings found";
-                    infoDiv.appendChild(nameP);
-                    productDiv.appendChild(img);
-                    productDiv.appendChild(infoDiv);
-
-                    container.appendChild(productDiv);
-                } else {
-                    data.forEach(product => {
-                        container.appendChild(createProductElement(product));
-                    });
-                }
-            })
-            .catch(error => {
-                loader.style.display = 'none';
-                createToast("error", "Failed to load products.");
-            });
+    walletManager.onWalletReady(() => {
+        getAllListingsByWallet();
     });
 }
 
+function getAllListingsByWallet() {
+    const loader = document.querySelector('.loader');
+    const container = document.querySelector('.main-products-container');
+    fetch('api/products/wallet/' + walletManager.getWalletString())
+        .then(response => response.json())
+        .then(data => {
+            loader.style.display = 'none';
+            container.innerHTML = '';
+            if (data.length === 0) {
+                const img = document.createElement('img');
+                img.src = "/img/broken-image.png";
+                img.alt = "no image lol";
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'short-product-info';
+                const nameP = document.createElement('p');
+                nameP.textContent = "No listings found";
+                infoDiv.appendChild(nameP);
+                productDiv.appendChild(img);
+                productDiv.appendChild(infoDiv);
+
+                container.appendChild(productDiv);
+            } else {
+                data.forEach(product => {
+                    container.appendChild(createProductElement(product));
+                });
+            }
+        })
+        .catch(error => {
+            loader.style.display = 'none';
+            createToast("error", "Failed to load products.");
+        });
+}
 
 function createProductElement(product) {
     const productDiv = document.createElement('div');
