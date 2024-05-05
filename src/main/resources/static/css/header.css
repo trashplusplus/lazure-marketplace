@@ -28,7 +28,7 @@ header > div > *:nth-child(1){
 }
 
 header img {
-    width: 45px;
+    width: 2rem;
 }
 
 ion-icon {

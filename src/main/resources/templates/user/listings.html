@@ -22,7 +22,7 @@
         <button id="close-popup" class="close-popup close-button">&times;</button>
         <h3 class="popup-name">New Product</h3>
         <hr>
-        <form th:action="@{/api/products/new}" th:object="${product}" method="post">
+        <form id="add-product-form" th:action="@{/api/products/new}" th:object="${product}" method="post">
             <p>Name:<span class="required-field-mark">*</span> <input type="text" placeholder="Your product name" th:field="*{name}" required/></p>
             <p>Description: <textarea placeholder="Something special?" th:field="*{description}"></textarea></p>
             <p>Type:<span class="required-field-mark">*</span>

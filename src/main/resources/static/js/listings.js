@@ -77,7 +77,7 @@ window.onclick = function(e) {
 }
 
 
-document.querySelector('form').addEventListener('submit', function(event) {
+document.getElementById('add-product-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
     let categoryId = document.querySelector('input[name="categoryId"]');

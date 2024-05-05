@@ -20,7 +20,7 @@
     border-radius: 5px;
     padding: 16px 17px;
     margin-bottom: 10px;
-    background: var(--secondary-color);
+    background: var(--secondary-contrast-color);
     justify-content: space-between;
     animation: show_toast 0.3s ease forwards;
 }

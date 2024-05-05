@@ -81,4 +81,11 @@ public class ProductsController {
             return ResponseEntity.badRequest().body("Error while getting categories.");
         }
     }
+
+    @GetMapping("/search-config")
+    public ResponseEntity<?> handleSearchConfig(@RequestParam List<Integer> selectedCategory) {
+        //System.out.println(selectedCategory);
+
+        return ResponseEntity.ok("Search configured successfully!");
+    }
 }

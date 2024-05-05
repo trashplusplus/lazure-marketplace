@@ -83,12 +83,14 @@ class WalletManager {
     async updateDisplayedUserInfo() {
         let wallet = this.wallet.publicKey;
         let profileURL = document.getElementById("profile");
+        let menuProfileURL = document.getElementById("menu-profile");
         const balance = await this.getAccountBalance(wallet);
 
         document.getElementById("balance").innerText = `${parseFloat(balance).toFixed(2)} SOL`;
 
         profileURL.innerText = this.shortenWalletAddress(wallet.toString());
         profileURL.href = "/profile/" + wallet.toString();
+        menuProfileURL.href = "/profile/" + wallet.toString();
     }
 
     async getAccountBalance(publicKey) {

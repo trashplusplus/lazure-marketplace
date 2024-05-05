@@ -5,8 +5,11 @@
     <title th:text="Marketplace"></title>
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/marketplace.css}">
     <link rel="stylesheet" th:href="@{/css/toast.css}">
+    <link rel="stylesheet" th:href="@{/css/listings.css}">
     <script th:src="@{/js/toast.js}" defer></script>
+    <script th:src="@{/js/marketplace.js}" defer></script>
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
@@ -15,6 +18,74 @@
 <body>
     <ul class="notifications"></ul>
     <div th:insert="~{parts/_header.html :: header}"></div>
-    <p th:text="Welcome"></p>
+    <div id="search-config" class="search-config">
+        <h3 class="popup-name">Search Config</h3>
+        <!--<img id="close-search-config" src="/img/next.png" alt="close">-->
+        <div id="close-search-config" class="close-sidebar">
+            <span class="line-icon line-top"></span>
+            <span class="line-icon line-bottom"></span>
+        </div>
+
+        <form id="search-config-form" th:action="@{/api/products/search-config}" method="get" class="search-config-form">
+            <div id="search-form-checkboxes"></div>
+            <input type="submit" value="Save"/>
+        </form>
+    </div>
+
+
+
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" placeholder="What you want to find?">
+            <img id="search-button" src="/img/search-interface-symbol.png" alt="search">
+            <img id="configure-search-button" src="/img/setting-lines.png" alt="settings">
+        </div>
+    </div>
+
+
+    <div class="products-container loader" style="display: flex;">
+        <div class="product">
+            <div class="short-product-info">
+                <div class="loader-spinner"></div>
+            </div>
+        </div>
+        <div class="product">
+            <div class="short-product-info">
+                <div class="loader-spinner"></div>
+            </div>
+        </div>
+        <div class="product">
+            <div class="short-product-info">
+                <div class="loader-spinner"></div>
+            </div>
+        </div>
+        <div class="product">
+            <div class="short-product-info">
+                <div class="loader-spinner"></div>
+            </div>
+        </div>
+        <div class="product">
+            <div class="short-product-info">
+                <div class="loader-spinner"></div>
+            </div>
+        </div>
+        <div class="product">
+            <div class="short-product-info">
+                <div class="loader-spinner"></div>
+            </div>
+        </div>
+        <div class="product">
+            <div class="short-product-info">
+                <div class="loader-spinner"></div>
+            </div>
+        </div>
+        <div class="product">
+            <div class="short-product-info">
+                <div class="loader-spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="products-container main-products-container"> </div>
 </body>
 </html>
