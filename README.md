@@ -12,9 +12,9 @@ Explore and acquire unique 3D assets, pixel art, and even rights to GitHub proje
 Join Lazure today and redefine what it means to own and trade digital creations in a seamless and innovative environment.
 
 
-**-What can you do on Lazure?**
+**-What can you do on Lazure?** 
 
-- **Buy and Sell Digital Assets:** Explore a diverse range of digital assets including 3D creations, pixel art, music, and more. 
+- **Buy and Sell Digital Assets and Coupons!:** Explore a diverse range of digital assets including 3D creations, pixel art, music, and more. 
 Whether you're an artist, developer, or enthusiast, Lazure provides a platform to showcase and trade your unique creations.
 - **Own Rights to Anything:** Lazure goes beyond traditional assets. 
 Here, you can acquire ownership rights to virtually anything – from digital artworks to access keys for GitHub projects, codes, or any web link. 
