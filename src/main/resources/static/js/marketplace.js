@@ -23,10 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const paragraphElement = document.createElement('p');
                 paragraphElement.className = 'search-config-form-item';
 
-                const spanElement = document.createElement('span');
-                spanElement.textContent = category.name;
-                spanElement.title = category.description;
-
                 const checkbox = document.createElement('input');
                 checkbox.type = "checkbox";
                 checkbox.className = "search-config-property";
@@ -35,8 +31,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('search-form-checkboxes').appendChild(checkbox);
 
 
+                const divElement = document.createElement("div");
+                divElement.className = "category-info-container"
+
+                const spanElement = document.createElement('span');
+                spanElement.textContent = category.name;
+
+                const infoIcon = document.createElement('img');
+                infoIcon.src = 'img/info.png';
+                infoIcon.alt = 'Info';
+                infoIcon.className = 'info-icon';
+                infoIcon.title = category.description;
+
+                divElement.appendChild(spanElement);
+                divElement.appendChild(infoIcon);
+
                 paragraphElement.appendChild(checkbox);
-                paragraphElement.appendChild(spanElement);
+                paragraphElement.appendChild(divElement);
 
 
                 container.appendChild(paragraphElement);
