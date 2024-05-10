@@ -122,5 +122,29 @@ Header: Authorization
     }
 ]
 ```
+🍃 Example of GET /get-products?limit2
 
+Creator's own products are not visible for him
+
+```
+[
+    {
+        "product_id": 3,
+        "name": "Ice Cream",
+        "description": "Source code of the game",
+        "price": 100,
+        "category_id": 1,
+        "user_id": 1
+    },
+    {
+        "product_id": 4,
+        "name": "Ice Cream",
+        "description": "Source code of the game",
+        "price": 100,
+        "category_id": 1,
+        "user_id": 1
+    },
+
+]
+```
 
