@@ -7,7 +7,6 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -37,6 +36,7 @@ func main() {
 	r.GET("/catalog", GetProductsByTitleHandler(db))
 	r.GET("/wallet/:walletId", GetProductsByWalletIdHandler(db))
 	r.GET("/category", GetAllCategoriesHandler(db))
+	r.GET("/get-products", GetProductsHandler(db))
 
 	serverAddress := ":" + port
 	log.Printf("Starting server on %s...", serverAddress)
@@ -51,35 +51,10 @@ func main() {
 func AddProductHandler(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var product Product
-		//token validating
-		token, err := ValidateToken(c)
-		if err != nil {
-			log.Println("Error: ", err)
-			c.IndentedJSON(401, gin.H{"message": "Invalid token"})
-			return
-		}
+		id := GetIdByTokenClaim(c)
+		product.User_Id = id
 
-		//isvalid
-		if token.Valid {
-			claims, ok := token.Claims.(jwt.MapClaims)
-			if !ok {
-				log.Println("invalid token claims: ", err)
-				c.IndentedJSON(401, gin.H{"message": "Invalid token claims"})
-				return
-			}
-
-			userId := claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata"].(string)
-			log.Println("userId: ", userId)
-
-			n, err := strconv.Atoi(userId)
-			if err != nil {
-				log.Println("Error: ", err)
-				return
-			}
-
-			product.User_Id = n
-
-		} else {
+		if id == -1 {
 			return
 		}
 
@@ -129,12 +104,44 @@ func GetProductsByTitleHandler(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
+func GetProductsHandler(db *sql.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		defaultLimit := 20
+		claimId := GetIdByTokenClaim(c)
+		limit := c.Query("limit")
+		limit_int, err := strconv.Atoi(limit)
+		if err != nil {
+			log.Println("Limit error: ", err)
+		}
+		defaultLimit = limit_int
+
+		products, err := GetProducts(db, defaultLimit, claimId)
+		if err != nil {
+			log.Println("Error: ", err)
+			c.JSON(404, gin.H{"message": "No products were found"})
+		} else {
+			c.IndentedJSON(200, products)
+		}
+	}
+}
+
 func GetProductsByWalletIdHandler(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		//-1 means unuthorized
+		id := GetIdByTokenClaim(c)
+
 		walletId := c.Param("walletId")
-		products, _ := GetProductsByWalletId(db, walletId)
+
+		log.Print("Grabbed id from token: ", id)
+
+		products, err := GetProductsByWalletId(db, walletId, id)
+		if err != nil {
+			c.JSON(500, gin.H{"message": "Internal server error"})
+			return
+		}
+
 		if len(products) == 0 {
-			c.JSON(200, []ProductToBuy{})
+			c.JSON(200, []Product{})
 			return
 		}
 		c.IndentedJSON(200, products)
@@ -156,40 +163,14 @@ func GetAllCategoriesHandler(db *sql.DB) gin.HandlerFunc {
 
 func DeleteProductByIdHandler(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var ownerId int
 		idStr := c.Param("id")
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
 			log.Println("Error: ", err)
 		}
+		claimId := GetIdByTokenClaim(c)
 
-		token, err := ValidateToken(c)
-		if err != nil {
-			c.JSON(401, gin.H{"message": "Invalid token"})
-			return
-		}
-
-		if token.Valid {
-			claims, ok := token.Claims.(jwt.MapClaims)
-			if !ok {
-				log.Println("invalid token claims: ", err)
-				c.JSON(401, gin.H{"message": "Invalid token claims"})
-				return
-			}
-
-			userId := claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata"].(string)
-			log.Println("userId: ", userId)
-
-			n, err := strconv.Atoi(userId)
-			if err != nil {
-				log.Println("Error: ", err)
-				return
-			}
-			ownerId = n
-
-		}
-
-		productName, err := DeleteProductById(db, id, ownerId)
+		productName, err := DeleteProductById(db, id, claimId)
 		if err != nil {
 			c.JSON(404, gin.H{"message": "Product wasn't deleted"})
 		} else {

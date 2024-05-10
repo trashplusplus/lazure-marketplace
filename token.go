@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
@@ -60,4 +61,28 @@ func ValidateToken(c *gin.Context) (*jwt.Token, error) {
 	}
 
 	return token, nil
+}
+
+func GetIdByTokenClaim(c *gin.Context) int {
+	token, err := ValidateToken(c)
+	if err != nil {
+		return -1
+	}
+
+	if token.Valid {
+		claims, _ := token.Claims.(jwt.MapClaims)
+		userId := claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata"].(string)
+
+		n, err := strconv.Atoi(userId)
+		if err != nil {
+			log.Println("Error: ", err)
+			return -1
+		}
+
+		return n
+
+	}
+
+	return -1
+
 }

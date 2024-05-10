@@ -12,18 +12,10 @@ type Product struct {
 	Name          string  `json:"name"`
 	Description   string  `json:"description"`
 	Price         float64 `json:"price"`
-	Resource_Link string  `json:"resource_link"`
+	Resource_Link string  `json:"resource_link,omitempty"`
 	Category_Id   int     `json:"category_id"`
 	User_Id       int     `json:"user_id"`
-}
-
-type ProductToBuy struct {
-	Product_Id  int     `json:"product_id"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Price       float64 `json:"price"`
-	Category_Id int     `json:"category_id"`
-	User_Id     int     `json:"user_id"`
+	Timestamp     string  `json:"timestamp,omitempty"`
 }
 
 type Category struct {
@@ -44,8 +36,8 @@ func AddProduct(db *sql.DB, product Product) error {
 	return nil
 }
 
-func GetProductById(db *sql.DB, id int) (*ProductToBuy, error) {
-	var product ProductToBuy
+func GetProductById(db *sql.DB, id int) (*Product, error) {
+	var product Product
 	row := db.QueryRow("SELECT product_id, name, description, price, user_id, category_id FROM Products WHERE product_id = $1", id)
 	err := row.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Category_Id)
 	if err != nil {
@@ -55,8 +47,45 @@ func GetProductById(db *sql.DB, id int) (*ProductToBuy, error) {
 	return &product, nil
 }
 
-func GetProductsByTitle(db *sql.DB, title string) ([]ProductToBuy, error) {
-	var products []ProductToBuy
+// TODO: test
+func GetProducts(db *sql.DB, limit int, userIdFromToken int) ([]Product, error) {
+	var products []Product
+	rows, err := db.Query("Select product_id, name, description, price, user_id, category_id from Products limit $1", limit)
+	if err != nil {
+		log.Println("GetProducts error: ", err)
+		return nil, err
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var product Product
+		err := rows.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Category_Id)
+		if err != nil {
+			log.Println("GetProducts error: ", err)
+			continue
+		}
+
+		if product.User_Id != userIdFromToken {
+			products = append(products, product)
+		}
+
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Println("GetProducts error: ", err)
+		return nil, err
+	}
+
+	if len(products) == 0 {
+		return nil, sql.ErrNoRows
+	}
+
+	return products, nil
+}
+
+// TODO: delete after creating /get-products
+func GetProductsByTitle(db *sql.DB, title string) ([]Product, error) {
+	var products []Product
 	rows, err := db.Query("Select product_id, name, description, price, user_id, category_id from Products where name ILIKE '%' || $1 || '%'", title)
 	if err != nil {
 		log.Println("GetProductByTitle error: ", err)
@@ -65,7 +94,7 @@ func GetProductsByTitle(db *sql.DB, title string) ([]ProductToBuy, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var product ProductToBuy
+		var product Product
 		err := rows.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Category_Id)
 		if err != nil {
 			log.Println("GetProductByTitle error: ", err)
@@ -86,10 +115,10 @@ func GetProductsByTitle(db *sql.DB, title string) ([]ProductToBuy, error) {
 	return products, nil
 }
 
-func GetProductsByWalletId(db *sql.DB, walletId string) ([]ProductToBuy, error) {
+func GetProductsByWalletId(db *sql.DB, walletId string, userIdFromToken int) ([]Product, error) {
 
-	var products []ProductToBuy
-	rows, err := db.Query("select p.product_id, p.name, p.description, p.price, p.user_id, p.category_id from Products p join Users u on p.user_id = u.user_id where u.wallet_id = $1", walletId)
+	var products []Product
+	rows, err := db.Query("select p.product_id, p.name, p.description, p.price, p.resource_link, p.user_id, p.category_id from Products p join Users u on p.user_id = u.user_id where u.wallet_id = $1", walletId)
 	if err != nil {
 		log.Println("GetProductsByWalletId error: ", err)
 		return nil, err
@@ -97,17 +126,23 @@ func GetProductsByWalletId(db *sql.DB, walletId string) ([]ProductToBuy, error) 
 	defer rows.Close()
 
 	for rows.Next() {
-		var product ProductToBuy
-		err := rows.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Category_Id)
+		var product Product
+		err := rows.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.Resource_Link, &product.User_Id, &product.Category_Id)
 		if err != nil {
 			log.Println("GetProductsByWalletId error: ", err)
 			continue
 		}
+
+		if product.User_Id != userIdFromToken {
+			product.Resource_Link = ""
+		}
+
 		products = append(products, product)
+
 	}
 
 	if len(products) == 0 {
-		return []ProductToBuy{}, sql.ErrNoRows
+		return []Product{}, sql.ErrNoRows
 	}
 
 	return products, nil
