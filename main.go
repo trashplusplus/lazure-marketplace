@@ -60,12 +60,14 @@ func AddProductHandler(db *sql.DB) gin.HandlerFunc {
 			return
 		}
 
+		c.BindJSON(&product)
+		log.Print("Product Price: ", product.Price)
+
 		if product.Price <= 0 {
-			c.IndentedJSON(400, gin.H{"message": "Price must be greater than 0"})
+			c.IndentedJSON(400, gin.H{"message": "Invalid price"})
 			return
 		}
 
-		c.BindJSON(&product)
 		AddProduct(db, product)
 		c.IndentedJSON(200, gin.H{"message": "Product added successfully"})
 	}
