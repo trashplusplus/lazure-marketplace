@@ -27,6 +27,8 @@ type Category struct {
 
 func AddProduct(db *sql.DB, product Product) error {
 	//todo validating by TOKEN
+	//12.05 todo validating of price
+
 	statement := `insert into Products(name, description, price, user_id, resource_link, category_id) values($1, $2, $3, $4, $5, $6)`
 	_, err := db.Exec(statement, product.Name, product.Description, product.Price, product.User_Id, product.Resource_Link, product.Category_Id)
 	if err != nil {
