@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -48,9 +49,26 @@ func GetProductById(db *sql.DB, id int) (*Product, error) {
 }
 
 // TODO: test
-func GetProducts(db *sql.DB, limit int, userIdFromToken int) ([]Product, error) {
+func GetProducts(db *sql.DB, limit int, offset int, title string, categoryId int, price int, userIdFromToken int) ([]Product, error) {
+
+	var argumentString string
+
+	if title != "" {
+		argumentString = argumentString + fmt.Sprintf("AND name ilike '%%%s%%' ", title)
+	}
+
+	if categoryId != 0 && categoryId > 0 {
+		argumentString = argumentString + fmt.Sprintf("AND category_id = %d ", categoryId)
+	}
+
+	if price != 0 && price > 0 {
+		argumentString = argumentString + fmt.Sprintf("AND price = %d ", price)
+	}
+
+	sqlScript := fmt.Sprintf("Select product_id, name, description, price, user_id, category_id from Products WHERE 1=1 %s limit $1 offset $2", argumentString)
+
 	var products []Product
-	rows, err := db.Query("Select product_id, name, description, price, user_id, category_id from Products limit $1", limit)
+	rows, err := db.Query(sqlScript, limit, offset)
 	if err != nil {
 		log.Println("GetProducts error: ", err)
 		return nil, err
@@ -73,38 +91,6 @@ func GetProducts(db *sql.DB, limit int, userIdFromToken int) ([]Product, error) 
 
 	if err := rows.Err(); err != nil {
 		log.Println("GetProducts error: ", err)
-		return nil, err
-	}
-
-	if len(products) == 0 {
-		return nil, sql.ErrNoRows
-	}
-
-	return products, nil
-}
-
-// TODO: delete after creating /get-products
-func GetProductsByTitle(db *sql.DB, title string) ([]Product, error) {
-	var products []Product
-	rows, err := db.Query("Select product_id, name, description, price, user_id, category_id from Products where name ILIKE '%' || $1 || '%'", title)
-	if err != nil {
-		log.Println("GetProductByTitle error: ", err)
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var product Product
-		err := rows.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Category_Id)
-		if err != nil {
-			log.Println("GetProductByTitle error: ", err)
-			continue
-		}
-		products = append(products, product)
-	}
-
-	if err := rows.Err(); err != nil {
-		log.Println("GetProductByTitle error: ", err)
 		return nil, err
 	}
 

@@ -33,7 +33,6 @@ func main() {
 	r.POST("/product", AddProductHandler(db))
 	r.GET("/product/:id", GetProductByIdHandler(db))
 	r.DELETE("/product/:id", DeleteProductByIdHandler(db))
-	r.GET("/catalog", GetProductsByTitleHandler(db))
 	r.GET("/wallet/:walletId", GetProductsByWalletIdHandler(db))
 	r.GET("/category", GetAllCategoriesHandler(db))
 	r.GET("/get-products", GetProductsHandler(db))
@@ -54,7 +53,10 @@ func AddProductHandler(db *sql.DB) gin.HandlerFunc {
 		id := GetIdByTokenClaim(c)
 		product.User_Id = id
 
+		log.Print("Grabbed id from token: ", id)
+
 		if id == -1 {
+			c.IndentedJSON(401, gin.H{"message": "Unauthorized"})
 			return
 		}
 
@@ -83,42 +85,41 @@ func GetProductByIdHandler(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
-// GetProductByTitleHandler returns a Gin handler function for retrieving a product by its title.
-//
-// It takes a *sql.DB as a parameter and returns a gin.HandlerFunc.
-func GetProductsByTitleHandler(db *sql.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		name := c.Query("name")
-		if name == "" {
-			c.JSON(404, gin.H{"message": "Search is empty"})
-			return
-		}
-
-		products, err := GetProductsByTitle(db, name)
-		if err != nil {
-			log.Println("Error: ", err)
-			c.JSON(404, gin.H{"message": "No products by that name was found"})
-		} else {
-			c.IndentedJSON(200, products)
-		}
-	}
-}
-
 func GetProductsHandler(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		defaultLimit := 20
 		claimId := GetIdByTokenClaim(c)
-		limit := c.Query("limit")
-		limit_int, err := strconv.Atoi(limit)
+		//title param
+		title := c.Query("title")
+
+		priceStr := c.Query("price")
+		price, err := strconv.Atoi(priceStr)
+		if err != nil {
+			log.Println("Price error: ", err)
+		}
+
+		//category param
+		categoryIdStr := c.Query("category_id")
+		categoryId, err := strconv.Atoi(categoryIdStr)
+		if err != nil {
+			log.Println("CategoryId error: ", err)
+		}
+		//next N products param
+		offsetStr := c.Query("offset")
+		offset, err := strconv.Atoi(offsetStr)
+		if err != nil {
+			log.Println("Offset error: ", err)
+		}
+		//limit param
+		limitStr := c.Query("limit")
+		limit, err := strconv.Atoi(limitStr)
 		if err != nil {
 			log.Println("Limit error: ", err)
 		}
-		defaultLimit = limit_int
 
-		products, err := GetProducts(db, defaultLimit, claimId)
+		products, err := GetProducts(db, limit, offset, title, categoryId, price, claimId)
 		if err != nil {
 			log.Println("Error: ", err)
-			c.JSON(404, gin.H{"message": "No products were found"})
+			c.JSON(404, []Product{})
 		} else {
 			c.IndentedJSON(200, products)
 		}
