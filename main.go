@@ -144,7 +144,8 @@ func GetProductsByWalletIdHandler(db *sql.DB) gin.HandlerFunc {
 
 		products, err := GetProductsByWalletId(db, walletId, id)
 		if err != nil {
-			c.JSON(500, gin.H{"message": "Internal server error"})
+			log.Println("Error: ", err)
+			c.JSON(404, []Product{})
 			return
 		}
 

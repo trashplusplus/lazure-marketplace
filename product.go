@@ -130,7 +130,7 @@ func GetProductsByWalletId(db *sql.DB, walletId string, userIdFromToken int) ([]
 	}
 
 	if len(products) == 0 {
-		return []Product{}, sql.ErrNoRows
+		return []Product{}, nil
 	}
 
 	return products, nil
