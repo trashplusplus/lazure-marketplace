@@ -105,11 +105,25 @@ func GetProductsHandler(db *sql.DB) gin.HandlerFunc {
 		}
 
 		//category param
-		categoryIdStr := c.Query("category_id")
-		categoryId, err := strconv.Atoi(categoryIdStr)
-		if err != nil {
-			log.Println("CategoryId error: ", err)
+		categoryListStrings := c.QueryArray("category_id")
+		var categoryListIds []int
+
+		for _, strID := range categoryListStrings {
+			id, err := strconv.Atoi(strID)
+			if err != nil {
+				log.Println("Error: ", err)
+			}
+			categoryListIds = append(categoryListIds, id)
 		}
+
+		if len(categoryListIds) == 0 {
+			fmt.Println("Filtering products by category IDs:", categoryListIds)
+		}
+
+		for i, v := range categoryListIds {
+			fmt.Println(i, v)
+		}
+
 		//next N products param
 		offsetStr := c.Query("offset")
 		offset, err := strconv.Atoi(offsetStr)
@@ -123,7 +137,7 @@ func GetProductsHandler(db *sql.DB) gin.HandlerFunc {
 			log.Println("Limit error: ", err)
 		}
 
-		products, err := GetProducts(db, limit, offset, title, categoryId, price, claimId)
+		products, err := GetProducts(db, limit, offset, title, categoryListIds, price, claimId)
 		if err != nil {
 			log.Println("Error: ", err)
 			c.JSON(200, []Product{})
