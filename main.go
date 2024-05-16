@@ -126,7 +126,7 @@ func GetProductsHandler(db *sql.DB) gin.HandlerFunc {
 		products, err := GetProducts(db, limit, offset, title, categoryId, price, claimId)
 		if err != nil {
 			log.Println("Error: ", err)
-			c.JSON(404, []Product{})
+			c.JSON(200, []Product{})
 		} else {
 			c.IndentedJSON(200, products)
 		}
@@ -145,7 +145,7 @@ func GetProductsByWalletIdHandler(db *sql.DB) gin.HandlerFunc {
 		products, err := GetProductsByWalletId(db, walletId, id)
 		if err != nil {
 			log.Println("Error: ", err)
-			c.JSON(404, []Product{})
+			c.JSON(200, []Product{})
 			return
 		}
 
