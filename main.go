@@ -76,19 +76,28 @@ func AddProductHandler(db *sql.DB) gin.HandlerFunc {
 func GetProductByIdHandler(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
+
+		idFromToken := GetIdByTokenClaim(c)
+		log.Print("Grabbed id from token: ", idFromToken)
+
 		log.Print("ID: ", idStr)
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
 			log.Println("Error: ", err)
 		}
 		product, err := GetProductById(db, id)
+
 		if err != nil {
 			log.Println("Error: ", err)
 			c.JSON(404, gin.H{"message": "Product not found"})
-		} else {
-			c.IndentedJSON(200, product)
+			return
 		}
 
+		if idFromToken != product.User_Id || idFromToken == -1 {
+			product.Resource_Link = ""
+		}
+
+		c.IndentedJSON(200, product)
 	}
 }
 

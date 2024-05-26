@@ -38,8 +38,8 @@ func AddProduct(db *sql.DB, product Product) error {
 
 func GetProductById(db *sql.DB, id int) (*Product, error) {
 	var product Product
-	row := db.QueryRow("SELECT product_id, name, description, price, user_id, category_id, datetime FROM Products WHERE product_id = $1", id)
-	err := row.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Category_Id, &product.Datetime)
+	row := db.QueryRow("SELECT product_id, name, description, price, user_id, resource_link, category_id, datetime FROM Products WHERE product_id = $1", id)
+	err := row.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Resource_Link, &product.Category_Id, &product.Datetime)
 	if err != nil {
 		log.Println("GetProductById error: ", err)
 		return nil, err
