@@ -34,7 +34,7 @@ func main() {
 	r.GET("/product/:id", GetProductByIdHandler(db))
 	r.DELETE("/product/:id", DeleteProductByIdHandler(db))
 	r.GET("/wallet/:walletId", GetProductsByWalletIdHandler(db))
-	r.GET("/category", GetAllCategoriesHandler(db))
+	r.GET("/categories", GetAllCategoriesHandler(db))
 	r.GET("/get-products", GetProductsHandler(db))
 
 	serverAddress := ":" + port
