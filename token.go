@@ -38,6 +38,14 @@ func ParseJWTToken(tokenString string) (*jwt.Token, error) {
 	return token, nil
 }
 
+func GrabToken(c *gin.Context) string {
+	authHeader := c.GetHeader("Authorization")
+	if authHeader == "" {
+		return ""
+	}
+	return authHeader
+}
+
 func ValidateToken(c *gin.Context) (*jwt.Token, error) {
 
 	authHeader := c.GetHeader("Authorization")

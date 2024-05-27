@@ -93,8 +93,14 @@ func GetProductByIdHandler(db *sql.DB) gin.HandlerFunc {
 			return
 		}
 
-		if idFromToken != product.User_Id || idFromToken == -1 {
-			//product.Resource_Link = ""
+		transaction := GetTransaction(db, idStr, GrabToken(c))
+		log.Println("Transaction: ", transaction.BuyerID)
+
+		//сначала проверяем куплен ли товар, если не куплен, то проверяем овнера, если нет то удаляем ссылку
+		if transaction.BuyerID != idFromToken {
+			if idFromToken != product.User_Id || idFromToken == -1 {
+				product.Resource_Link = ""
+			}
 		}
 
 		c.IndentedJSON(200, product)
