@@ -94,7 +94,7 @@ func GetProductByIdHandler(db *sql.DB) gin.HandlerFunc {
 		}
 
 		if idFromToken != product.User_Id || idFromToken == -1 {
-			product.Resource_Link = ""
+			//product.Resource_Link = ""
 		}
 
 		c.IndentedJSON(200, product)
