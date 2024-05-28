@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type Transaction struct {
@@ -18,7 +19,7 @@ type Transaction struct {
 
 func GetTransaction(db *sql.DB, idStr string, token string) Transaction {
 	client := &http.Client{}
-	url := "https://accountsapi-3a5f92f4b3d5.herokuapp.com/Transactions/product/" + idStr
+	url := "https://accountsapi-3a5f92f4b3d5.herokuapp.com/Transactions/my-purchases"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Println("Error creating request to transactions API: ", err)
@@ -41,9 +42,17 @@ func GetTransaction(db *sql.DB, idStr string, token string) Transaction {
 		return Transaction{}
 	}
 
+	idInt, err := strconv.Atoi(idStr)
+	if err != nil {
+		log.Println("Error: ", err)
+	}
+
 	if len(transactions) > 0 {
 		for _, transaction := range transactions {
-			return transaction
+			if transaction.ProductID == idInt {
+				return transaction
+			}
+
 		}
 	}
 
