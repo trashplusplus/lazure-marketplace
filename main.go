@@ -36,6 +36,7 @@ func main() {
 	r.GET("/wallet/:walletId", GetProductsByWalletIdHandler(db))
 	r.GET("/categories", GetAllCategoriesHandler(db))
 	r.GET("/get-products", GetProductsHandler(db))
+	r.GET("/max-cost", GetMaxCostHandler(db))
 
 	serverAddress := ":" + port
 	log.Printf("Starting server on %s...", serverAddress)
@@ -107,20 +108,23 @@ func GetProductByIdHandler(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
+func GetMaxCostHandler(db *sql.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		maxCost, _ := GetMaxCost(db)
+
+		c.IndentedJSON(200, gin.H{"maxCost": maxCost})
+	}
+}
+
 func GetProductsHandler(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		claimId := GetIdByTokenClaim(c)
 		//title param
 		title := c.Query("title")
 
-		priceStr := c.Query("price")
-		price, err := strconv.Atoi(priceStr)
-		if err != nil {
-			log.Println("Price error: ", err)
-		}
-
 		//category param
-		categoryListStrings := c.QueryArray("category_id")
+		categoryListStrings := c.QueryArray("categoryId")
 		var categoryListIds []int
 
 		for _, strID := range categoryListStrings {
@@ -152,7 +156,21 @@ func GetProductsHandler(db *sql.DB) gin.HandlerFunc {
 			log.Println("Limit error: ", err)
 		}
 
-		products, err := GetProducts(db, limit, offset, title, categoryListIds, price, claimId)
+		//minPrice param
+		minPriceStr := c.Query("minPrice")
+		minPrice, err := strconv.Atoi(minPriceStr)
+		if err != nil {
+			log.Println("minPrice error: ", err)
+		}
+
+		//maxPrice param
+		maxPriceStr := c.Query("maxPrice")
+		maxPrice, err := strconv.Atoi(maxPriceStr)
+		if err != nil {
+			log.Println("maxPrice error: ", err)
+		}
+
+		products, err := GetProducts(db, limit, offset, title, categoryListIds, minPrice, maxPrice, claimId)
 		if err != nil {
 			log.Println("Error: ", err)
 			c.JSON(200, []Product{})

@@ -9,13 +9,13 @@ import (
 )
 
 type Product struct {
-	Product_Id    int     `json:"product_id"`
+	Product_Id    int     `json:"productId"`
 	Name          string  `json:"name"`
 	Description   string  `json:"description"`
 	Price         float64 `json:"price"`
-	Resource_Link string  `json:"resource_link,omitempty"`
-	Category_Id   int     `json:"category_id"`
-	User_Id       int     `json:"user_id"`
+	Resource_Link string  `json:"resourceLink,omitempty"`
+	Category_Id   int     `json:"categoryId"`
+	User_Id       int     `json:"userId"`
 	Datetime      string  `json:"datetime,omitempty"`
 }
 
@@ -48,7 +48,7 @@ func GetProductById(db *sql.DB, id int) (*Product, error) {
 }
 
 // TODO: test
-func GetProducts(db *sql.DB, limit int, offset int, title string, categoryIds []int, price int, userIdFromToken int) ([]Product, error) {
+func GetProducts(db *sql.DB, limit int, offset int, title string, categoryIds []int, minPrice int, maxPrice int, userIdFromToken int) ([]Product, error) {
 
 	var argumentString string
 
@@ -56,22 +56,31 @@ func GetProducts(db *sql.DB, limit int, offset int, title string, categoryIds []
 		argumentString = argumentString + fmt.Sprintf("AND name ilike '%%%s%%' ", title)
 	}
 
+	if minPrice > 0 {
+		argumentString = argumentString + fmt.Sprintf("AND price >= %d ", minPrice)
+	}
+
+	// Add max price filter if present
+	if maxPrice > 0 {
+		argumentString = argumentString + fmt.Sprintf("AND price <= %d ", maxPrice)
+	}
+
 	if len(categoryIds) > 0 {
-		_prefix := "AND "
+		_prefix := "AND ("
 		for i, categoryId := range categoryIds {
 			if i > 0 {
-				_prefix = "OR "
+				_prefix = "OR"
 			}
 			argumentString = argumentString + fmt.Sprintf("%s category_id = %d ", _prefix, categoryId)
 		}
+
+		argumentString = argumentString + ")"
 	}
 
-	if price != 0 && price > 0 {
-		argumentString = argumentString + fmt.Sprintf("AND price = %d ", price)
-	}
+	sqlScript := fmt.Sprintf("Select product_id, name, description, price, user_id, category_id, datetime from Products WHERE 1=1 %sorder by datetime desc limit $1 offset $2", argumentString)
 
-	sqlScript := fmt.Sprintf("Select product_id, name, description, price, user_id, category_id, datetime from Products WHERE 1=1 %s order by datetime desc limit $1 offset $2", argumentString)
-
+	//debug
+	//log.Printf("SQL script: %s", sqlScript)
 	var products []Product
 	rows, err := db.Query(sqlScript, limit, offset)
 	if err != nil {
@@ -104,6 +113,24 @@ func GetProducts(db *sql.DB, limit int, offset int, title string, categoryIds []
 	}
 
 	return products, nil
+}
+
+func GetMaxCost(db *sql.DB) (float64, error) {
+	rows, err := db.Query("select max(price) from Products")
+	if err != nil {
+		log.Println("GetMaxCost error: ", err)
+		return 0, err
+	}
+	defer rows.Close()
+	var maxCost float64
+	for rows.Next() {
+		err := rows.Scan(&maxCost)
+		if err != nil {
+			log.Println("GetMaxCost error: ", err)
+			return 0, err
+		}
+	}
+	return maxCost, nil
 }
 
 func GetProductsByWalletId(db *sql.DB, walletId string, userIdFromToken int) ([]Product, error) {
