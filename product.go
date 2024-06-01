@@ -20,7 +20,7 @@ type Product struct {
 }
 
 type Category struct {
-	Category_Id int    `json:"category_id"`
+	Category_Id int    `json:"categoryId"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }
