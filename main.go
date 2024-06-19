@@ -158,14 +158,14 @@ func GetProductsHandler(db *sql.DB) gin.HandlerFunc {
 
 		//minPrice param
 		minPriceStr := c.Query("minPrice")
-		minPrice, err := strconv.Atoi(minPriceStr)
+		minPrice, err := strconv.ParseFloat(minPriceStr, 64)
 		if err != nil {
 			log.Println("minPrice error: ", err)
 		}
 
 		//maxPrice param
 		maxPriceStr := c.Query("maxPrice")
-		maxPrice, err := strconv.Atoi(maxPriceStr)
+		maxPrice, err := strconv.ParseFloat(maxPriceStr, 64)
 		if err != nil {
 			log.Println("maxPrice error: ", err)
 		}

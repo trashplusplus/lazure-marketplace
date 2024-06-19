@@ -48,7 +48,7 @@ func GetProductById(db *sql.DB, id int) (*Product, error) {
 }
 
 // TODO: test
-func GetProducts(db *sql.DB, limit int, offset int, title string, categoryIds []int, minPrice int, maxPrice int, userIdFromToken int) ([]Product, error) {
+func GetProducts(db *sql.DB, limit int, offset int, title string, categoryIds []int, minPrice float64, maxPrice float64, userIdFromToken int) ([]Product, error) {
 
 	var argumentString string
 
@@ -57,12 +57,12 @@ func GetProducts(db *sql.DB, limit int, offset int, title string, categoryIds []
 	}
 
 	if minPrice > 0 {
-		argumentString = argumentString + fmt.Sprintf("AND price >= %d ", minPrice)
+		argumentString = argumentString + fmt.Sprintf("AND price >= %.2f ", minPrice)
 	}
 
 	// Add max price filter if present
 	if maxPrice > 0 {
-		argumentString = argumentString + fmt.Sprintf("AND price <= %d ", maxPrice)
+		argumentString = argumentString + fmt.Sprintf("AND price <= %.2f ", maxPrice)
 	}
 
 	if len(categoryIds) > 0 {
