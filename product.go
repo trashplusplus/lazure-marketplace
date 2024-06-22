@@ -17,6 +17,7 @@ type Product struct {
 	Category_Id   int     `json:"categoryId"`
 	User_Id       int     `json:"userId"`
 	Datetime      string  `json:"datetime,omitempty"`
+	Youtube_Link  string  `json:"youtubeLink,omitempty"`
 }
 
 type Category struct {
@@ -26,8 +27,8 @@ type Category struct {
 }
 
 func AddProduct(db *sql.DB, product Product) error {
-	statement := `insert into Products(name, description, price, user_id, resource_link, category_id, datetime) values($1, $2, $3, $4, $5, $6, now())`
-	_, err := db.Exec(statement, product.Name, product.Description, product.Price, product.User_Id, product.Resource_Link, product.Category_Id)
+	statement := `insert into Products(name, description, price, user_id, resource_link, category_id, datetime, youtube_link) values($1, $2, $3, $4, $5, $6, now(), $7)`
+	_, err := db.Exec(statement, product.Name, product.Description, product.Price, product.User_Id, product.Resource_Link, product.Category_Id, product.Youtube_Link)
 	if err != nil {
 		log.Println("Error: ", err)
 		return err
@@ -38,8 +39,8 @@ func AddProduct(db *sql.DB, product Product) error {
 
 func GetProductById(db *sql.DB, id int) (*Product, error) {
 	var product Product
-	row := db.QueryRow("SELECT product_id, name, description, price, user_id, resource_link, category_id, datetime FROM Products WHERE product_id = $1", id)
-	err := row.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Resource_Link, &product.Category_Id, &product.Datetime)
+	row := db.QueryRow("SELECT product_id, name, description, price, user_id, resource_link, category_id, datetime, youtube_link FROM Products WHERE product_id = $1", id)
+	err := row.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Resource_Link, &product.Category_Id, &product.Datetime, &product.Youtube_Link)
 	if err != nil {
 		log.Println("GetProductById error: ", err)
 		return nil, err
@@ -77,7 +78,7 @@ func GetProducts(db *sql.DB, limit int, offset int, title string, categoryIds []
 		argumentString = argumentString + ")"
 	}
 
-	sqlScript := fmt.Sprintf("Select product_id, name, description, price, user_id, category_id, datetime from Products WHERE 1=1 %sorder by datetime desc limit $1 offset $2", argumentString)
+	sqlScript := fmt.Sprintf("Select product_id, name, description, price, user_id, category_id, datetime, youtube_link from Products WHERE 1=1 %sorder by datetime desc limit $1 offset $2", argumentString)
 
 	//debug
 	//log.Printf("SQL script: %s", sqlScript)
@@ -91,7 +92,7 @@ func GetProducts(db *sql.DB, limit int, offset int, title string, categoryIds []
 	defer rows.Close()
 	for rows.Next() {
 		var product Product
-		err := rows.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Category_Id, &product.Datetime)
+		err := rows.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.User_Id, &product.Category_Id, &product.Datetime, &product.Youtube_Link)
 		if err != nil {
 			log.Println("GetProducts error: ", err)
 			continue
@@ -136,7 +137,7 @@ func GetMaxCost(db *sql.DB) (float64, error) {
 func GetProductsByWalletId(db *sql.DB, walletId string, userIdFromToken int) ([]Product, error) {
 
 	var products []Product
-	rows, err := db.Query("select p.product_id, p.name, p.description, p.price, p.resource_link, p.user_id, p.category_id, p.datetime from Products p join Users u on p.user_id = u.user_id where u.wallet_id = $1 order by p.datetime desc", walletId)
+	rows, err := db.Query("select p.product_id, p.name, p.description, p.price, p.resource_link, p.user_id, p.category_id, p.datetime p.youtube_link from Products p join Users u on p.user_id = u.user_id where u.wallet_id = $1 order by p.datetime desc", walletId)
 	if err != nil {
 		log.Println("GetProductsByWalletId error: ", err)
 		return nil, err
@@ -145,7 +146,7 @@ func GetProductsByWalletId(db *sql.DB, walletId string, userIdFromToken int) ([]
 
 	for rows.Next() {
 		var product Product
-		err := rows.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.Resource_Link, &product.User_Id, &product.Category_Id, &product.Datetime)
+		err := rows.Scan(&product.Product_Id, &product.Name, &product.Description, &product.Price, &product.Resource_Link, &product.User_Id, &product.Category_Id, &product.Datetime, &product.Youtube_Link)
 		if err != nil {
 			log.Println("GetProductsByWalletId error: ", err)
 			continue
