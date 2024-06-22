@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -67,6 +68,16 @@ func AddProductHandler(db *sql.DB) gin.HandlerFunc {
 		if product.Price <= 0 {
 			c.IndentedJSON(400, gin.H{"message": "Invalid price"})
 			return
+		}
+
+		if product.Youtube_Link != "" &&
+			!strings.HasPrefix(product.Youtube_Link, "https://www.youtube.com/watch?v=") &&
+			!strings.HasPrefix(product.Youtube_Link, "https://youtu.be/") &&
+			!strings.HasPrefix(product.Youtube_Link, "https://youtube.com/watch?v=") {
+
+			c.IndentedJSON(400, gin.H{"message": "Invalid youtube link"})
+			return
+
 		}
 
 		AddProduct(db, product)

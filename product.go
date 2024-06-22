@@ -137,7 +137,7 @@ func GetMaxCost(db *sql.DB) (float64, error) {
 func GetProductsByWalletId(db *sql.DB, walletId string, userIdFromToken int) ([]Product, error) {
 
 	var products []Product
-	rows, err := db.Query("select p.product_id, p.name, p.description, p.price, p.resource_link, p.user_id, p.category_id, p.datetime p.youtube_link from Products p join Users u on p.user_id = u.user_id where u.wallet_id = $1 order by p.datetime desc", walletId)
+	rows, err := db.Query("select p.product_id, p.name, p.description, p.price, p.resource_link, p.user_id, p.category_id, p.datetime, p.youtube_link from Products p join Users u on p.user_id = u.user_id where u.wallet_id = $1 order by p.datetime desc", walletId)
 	if err != nil {
 		log.Println("GetProductsByWalletId error: ", err)
 		return nil, err
